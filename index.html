@@ -3,7 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lawson Morris | Portfolio & Contact</title>
+    <title>Lawson Morris | Links</title>
+    <!-- Favicon: Embedded SVG for high-contrast "LM" logo -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%23171717'/%3E%3Ctext x='50%25' y='70%25' dominant-baseline='middle' text-anchor='middle' font-size='60' font-weight='bold' fill='%2322d3ee'%3ELM%3C/text%3E%3C/svg%3E">
     <!-- Load Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Configure Tailwind for the "Inter" font and custom colors -->
@@ -124,7 +126,35 @@
                 lawsonmorris.co.uk | Built for GitHub Pages
             </p>
         </div>
-
     </div>
+    
+    <!-- JavaScript for Auto-Resizing (Important for Google Sites Embed) -->
+    <script>
+        // Function to send the current height of the content to the parent frame (Google Sites)
+        function sendHeight() {
+            // Get the total height of the content, including padding and margins
+            const bodyHeight = document.body.scrollHeight;
+            
+            // Check if we are inside an iframe before trying to send the message
+            if (window.parent && window.parent !== window) {
+                // Post the message to the parent window
+                // '*' means it can be received by any parent origin (necessary for cross-origin iframes)
+                window.parent.postMessage({
+                    height: bodyHeight
+                }, '*'); 
+            }
+        }
+
+        // Send height immediately on load and again on window resize
+        window.onload = sendHeight;
+        window.onresize = sendHeight;
+        
+        // Also observe mutations to the body (like content being added or removed)
+        const observer = new MutationObserver(sendHeight);
+        observer.observe(document.body, { childList: true, subtree: true, attributes: true });
+
+        // Initial call to ensure the height is set immediately after the page content is rendered
+        setTimeout(sendHeight, 100); 
+    </script>
 </body>
 </html>
