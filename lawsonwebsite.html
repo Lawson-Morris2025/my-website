@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lawson Morris | Portfolio & Contact</title>
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Configure Tailwind for the "Inter" font and custom colors -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        'primary': '#8b5cf6', // Electric Purple
+                        'accent': '#22d3ee',  // Vibrant Cyan
+                        'card-bg': '#1f2937', // Deep Slate Gray
+                    },
+                    boxShadow: {
+                        // Custom glow effect for the main card
+                        'glow': '0 20px 25px -5px rgba(139, 92, 246, 0.3), 0 10px 10px -5px rgba(139, 92, 246, 0.2)',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Ensures smooth scaling and uses the defined font */
+        body { 
+            font-family: 'Inter', sans-serif;
+            /* Subtle radial gradient background for depth */
+            background: radial-gradient(circle at 50% 10%, #171717, #0a0a0a);
+        }
+
+        /* Keyframes for a subtle fade-in and slight upward lift */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Utility class to apply the animation */
+        .animate-fadeInUp {
+            animation: fadeInUp 0.75s ease-out forwards;
+        }
+
+        /* Staggered animation delays for sections */
+        .delay-100 { animation-delay: 0.1s; }
+        .delay-200 { animation-delay: 0.2s; }
+        .delay-300 { animation-delay: 0.3s; }
+    </style>
+</head>
+<body class="text-white min-h-screen flex items-center justify-center p-4">
+
+    <!-- Main Content Container: Centered and responsive card-like layout -->
+    <div class="animate-fadeInUp opacity-0 w-full max-w-xl bg-card-bg p-8 md:p-10 rounded-2xl shadow-glow transition duration-300 hover:shadow-primary/70">
+
+        <!-- Profile Image & Header Section -->
+        <header class="text-center mb-10 delay-100">
+            <!-- Profile Image Placeholder (Replace the URL below with your actual image link!) -->
+            <img src="https://placehold.co/100x100/374151/ffffff?text=LM" 
+                 onerror="this.src='https://placehold.co/100x100/374151/ffffff?text=LM'"
+                 alt="Lawson Morris Profile" 
+                 class="w-24 h-24 rounded-full mx-auto mb-4 border-4 border-accent shadow-lg"
+            />
+            
+            <!-- Main Name -->
+            <h1 class="text-6xl font-extrabold tracking-tight text-primary sm:text-7xl">
+                Lawson Morris
+            </h1>
+        </header>
+
+        <!-- Projects & Social Section -->
+        <div class="border-t border-gray-700 pt-8 delay-200">
+            
+            <!-- Project Links -->
+            <h2 class="text-3xl font-bold mb-6 text-center text-accent">My Projects & Sites</h2>
+            <div id="project-links-container" class="space-y-4 mb-10">
+
+                <!-- Link 1: Photos -->
+                <a href="https://photos.lawsonmorris.co.uk" target="_blank" rel="noopener noreferrer"
+                   class="block w-full text-center px-6 py-4 text-xl font-semibold rounded-xl text-white bg-gray-700/80 border-2 border-gray-700 hover:bg-gray-700 transition duration-300 ease-in-out shadow-lg hover:shadow-xl transform hover:scale-[1.01] focus:outline-none focus:ring-4 focus:ring-offset-4 focus:ring-accent/50 focus:ring-offset-card-bg">
+                    <span class="font-bold text-accent">Photos</span>.lawsonmorris.co.uk
+                </a>
+
+                <!-- Future link goes here! Copy the button above and change the href and text. -->
+            </div>
+
+            <!-- Social Links Section -->
+            <h3 class="text-3xl font-bold mb-6 text-center text-accent">Find Me On Social</h3>
+            <div id="social-links-container" class="space-y-4">
+                
+                <!-- Link: TikTok -->
+                <a href="https://www.tiktok.com/@lawson.morris4" target="_blank" rel="noopener noreferrer"
+                   class="block w-full text-center px-6 py-4 text-xl font-semibold rounded-xl text-white bg-pink-600/90 border-2 border-pink-700 hover:bg-pink-600 transition duration-300 ease-in-out shadow-lg hover:shadow-xl transform hover:scale-[1.01] focus:outline-none focus:ring-4 focus:ring-offset-4 focus:ring-pink-500/50 focus:ring-offset-card-bg">
+                    <!-- SVG Icon for TikTok -->
+                    <svg class="w-6 h-6 inline mr-3 -mt-0.5" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12.5 1.5c-1.38 0-2.5 1.12-2.5 2.5v16c0 1.38 1.12 2.5 2.5 2.5s2.5-1.12 2.5-2.5V4c0-1.38-1.12-2.5-2.5-2.5zm1 19c0 .83-.67 1.5-1.5 1.5s-1.5-.67-1.5-1.5V17h3v3.5zm-1.5-14c-1.66 0-3 1.34-3 3v2h6V7c0-1.66-1.34-3-3-3zM7 9v11h3V9H7z"></path></svg>
+                    TikTok: @lawson.morris4
+                </a>
+
+            </div>
+
+            <!-- Contact Section (Direct Email Contact) -->
+            <div class="mt-10 pt-6 border-t border-gray-700 text-center delay-300">
+                <h3 class="text-2xl font-semibold mb-5 text-gray-200">Say Hello</h3>
+                <a href="mailto:hey@lawsonmorris.co.uk"
+                   class="inline-flex items-center justify-center px-8 py-4 border-2 border-primary text-lg font-bold rounded-xl shadow-2xl text-white bg-primary hover:bg-indigo-700 transition duration-300 ease-in-out transform hover:scale-[1.03] focus:outline-none focus:ring-4 focus:ring-offset-4 focus:ring-primary/50 focus:ring-offset-card-bg">
+                    <!-- Simple SVG Email Icon -->
+                    <svg class="h-6 w-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8m-9 13h9a2 2 0 002-2V5a2 2 0 00-2-2H3a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
+                    hey@lawsonmorris.co.uk
+                </a>
+            </div>
+
+            <!-- Footer Domain -->
+            <p class="mt-10 text-center text-sm text-gray-500">
+                lawsonmorris.co.uk | Built for GitHub Pages
+            </p>
+        </div>
+
+    </div>
+</body>
+</html>
