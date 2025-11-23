@@ -164,9 +164,13 @@
             </div>
 
             <!-- Footer Domain -->
-            <p class="mt-10 text-center text-sm text-gray-500">
-                lawsonmorris.co.uk | © 2025 Lawson Morris — All Rights Reserved.
-            </p>
+<p class="mt-10 text-center text-sm text-gray-500">
+    lawsonmorris.co.uk | <span id="copyright-year"></span> Lawson Morris — All Rights Reserved.
+</p>
+<script>
+    // Automatically update the year
+    document.getElementById('copyright-year').textContent = new Date().getFullYear();
+</script>
         </div>
     </div>
     
