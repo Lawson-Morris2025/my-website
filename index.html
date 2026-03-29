@@ -15,48 +15,105 @@
             --nav-bg: rgba(0, 0, 0, 0.4);
             --nav-border: rgba(255, 255, 255, 0.1);
         }
-        * { margin: 0; padding: 0; box-sizing: border-box; cursor: none !important; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body::-webkit-scrollbar { display: none; }
         body { 
             background: #000; 
             color: #fff; 
-            overflow: hidden; 
+            overflow-x: hidden;
+            overflow-y: auto;
             font-family: 'Inter', sans-serif; 
-            height: 100vh;
+            min-height: 100vh;
             transition: background 0.5s ease;
+            -ms-overflow-style: none;
+            scrollbar-width: none;
         }
 
-        /* --- ADVANCED CURSOR SYSTEM --- */
-        #cursor-follower {
+        /* Custom cursor logic */
+        body.site-entered * { cursor: none !important; }
+
+        /* --- LANDING --- */
+        #landing-page {
             position: fixed;
-            width: 40px;
-            height: 40px;
-            border: 2px solid var(--cursor-color);
-            border-radius: 50%;
-            pointer-events: none;
-            z-index: 1000000;
+            inset: 0;
+            background: #000;
+            z-index: 10000000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.8s ease, visibility 0.8s;
+            padding: 20px;
+        }
+        #landing-page.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+        .landing-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: clamp(2rem, 8vw, 5rem);
+            letter-spacing: -4px;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        .landing-subtitle {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            color: var(--accent);
+            margin-bottom: 40px;
+            opacity: 0.8;
+            text-align: center;
+        }
+        .year-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            max-width: 400px;
+            width: 100%;
+        }
+        .year-opt {
+            background: transparent;
+            border: 1px solid rgba(255,255,255,0.2);
+            padding: 20px;
+            border-radius: 12px;
+            color: #fff;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.2rem;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+        .year-opt:hover {
+            background: #fff;
+            color: #000;
+            transform: translateY(-5px);
+            border-color: #fff;
+        }
+
+        /* --- CURSOR --- */
+        #cursor-follower {
+            position: fixed; width: 40px; height: 40px; border: 2px solid var(--cursor-color);
+            border-radius: 50%; pointer-events: none; z-index: 1000000;
             transition: width 0.3s, height 0.3s, background 0.3s, border-color 0.3s;
-            transform: translate(-50%, -50%);
-            mix-blend-mode: difference;
+            transform: translate(-50%, -50%); mix-blend-mode: difference;
+            display: none;
         }
         #cursor-dot {
-            position: fixed;
-            width: 6px;
-            height: 6px;
-            background: var(--cursor-color);
-            border-radius: 50%;
-            pointer-events: none;
-            z-index: 1000001;
+            position: fixed; width: 6px; height: 6px; background: var(--cursor-color);
+            border-radius: 50%; pointer-events: none; z-index: 1000001;
             transform: translate(-50%, -50%);
+            display: none;
         }
-        .hovering #cursor-follower {
-            width: 80px;
-            height: 80px;
-            background: var(--cursor-color);
-            border-color: transparent;
-        }
-        .clicking #cursor-follower {
-            transform: translate(-50%, -50%) scale(0.8);
-            opacity: 0.5;
+        body.site-entered #cursor-follower, 
+        body.site-entered #cursor-dot { display: block; }
+        
+        .hovering #cursor-follower { width: 80px; height: 80px; background: var(--cursor-color); border-color: transparent; }
+
+        @media (hover: none) and (pointer: coarse) {
+            #cursor-follower, #cursor-dot { display: none !important; }
+            body.site-entered * { cursor: auto !important; }
         }
 
         /* --- STAGES --- */
@@ -64,344 +121,238 @@
             position: fixed; inset: 0; display: none; opacity: 0;
             transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1);
             overflow-y: auto; overflow-x: hidden;
+            padding-bottom: 120px;
         }
         .stage.active { display: block; opacity: 1; }
 
-        /* --- RE-DESIGNED NAVIGATION --- */
+        /* --- NAVIGATION --- */
         .time-traveler-container {
-            position: fixed;
-            bottom: 40px;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 1000005;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 10px;
+            position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
+            z-index: 1000005; display: flex; flex-direction: column; align-items: center; gap: 10px;
+            width: 95%; max-width: 400px;
+            opacity: 0; pointer-events: none; transition: opacity 0.5s;
         }
-        .nav-label {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 10px;
-            text-transform: uppercase;
-            letter-spacing: 4px;
-            opacity: 0.4;
-            transition: opacity 0.3s;
-        }
+        body.site-entered .time-traveler-container { opacity: 1; pointer-events: auto; }
+
+        .nav-label { font-family: 'JetBrains Mono', monospace; font-size: 9px; text-transform: uppercase; letter-spacing: 2px; opacity: 0.4; }
         .time-traveler {
-            display: flex;
-            position: relative;
-            background: var(--nav-bg);
-            padding: 6px;
-            border-radius: 20px;
-            backdrop-filter: blur(20px);
-            border: 1px solid var(--nav-border);
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            display: flex; position: relative; background: var(--nav-bg); padding: 4px;
+            border-radius: 100px; backdrop-filter: blur(20px); border: 1px solid var(--nav-border);
+            width: 100%; justify-content: space-between;
         }
         .time-btn {
-            position: relative;
-            z-index: 2;
-            width: 55px;
-            height: 38px;
-            border-radius: 14px;
-            border: none;
-            background: transparent;
-            color: rgba(255,255,255,0.4); 
-            font-weight: 800;
-            font-size: 13px;
-            font-family: 'JetBrains Mono', monospace;
-            transition: color 0.4s ease;
+            position: relative; z-index: 2; flex: 1; height: 38px; border-radius: 100px;
+            border: none; background: transparent; color: rgba(255,255,255,0.4); 
+            font-weight: 800; font-size: 11px; font-family: 'JetBrains Mono', monospace;
         }
-        .time-btn:hover { color: #fff; }
         .time-btn.selected { color: #000; }
-        
         .nav-indicator {
-            position: absolute;
-            top: 6px;
-            left: 6px;
-            height: 38px;
-            width: 55px;
-            background: #fff;
-            border-radius: 14px;
-            z-index: 1;
-            transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
-            box-shadow: 0 4px 15px rgba(255,255,255,0.3);
+            position: absolute; top: 4px; left: 4px; height: 38px;
+            width: calc((100% - 8px) / 6); background: #fff; border-radius: 100px;
+            z-index: 1; transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
 
-        /* --- 1991: THE CRT --- */
-        #stage-1991 { 
-            background: #0a0e0a; color: #3df33d; font-family: 'Courier Prime', monospace; 
-            padding: 60px; text-shadow: 0 0 5px #3df33d;
-        }
+        /* --- 1991 --- */
+        #stage-1991 { background: #0a0e0a; color: #3df33d; font-family: 'Courier Prime', monospace; padding: 20px; }
         #stage-1991::before {
             content: " "; position: fixed; inset: 0; pointer-events: none;
-            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
-            background-size: 100% 3px, 3px 100%; z-index: 2;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 255, 0, 0.06));
+            background-size: 100% 3px, 3px 100%; z-index: 10;
         }
-        .t-scanline {
-            width: 100%; height: 100px; z-index: 3; background: linear-gradient(0deg, rgba(0,0,0,0) 0%, rgba(255,255,255,0.05) 50%, rgba(0,0,0,0) 100%);
-            position: absolute; bottom: 100%; animation: scanline 8s linear infinite;
-        }
-        @keyframes scanline { to { bottom: -100px; } }
 
-        /* --- 1996: NETSCAPE --- */
+        /* --- 1996 --- */
         #stage-1996 { background: #bfbfbf; color: #000; font-family: 'Times New Roman', serif; }
-        .n-header { background: #bfbfbf; border-bottom: 3px solid #808080; display: flex; align-items: center; padding: 10px; gap: 10px; box-shadow: inset 2px 2px #dfdfdf; }
-        .n-card { background: #fff; border: 3px inset #dfdfdf; padding: 40px; max-width: 800px; margin: 40px auto; min-height: 80vh; }
-        .n-link { color: #0000EE; text-decoration: underline; font-weight: bold; }
+        .n-card { background: #fff; border: 3px inset #dfdfdf; padding: 20px; max-width: 800px; margin: 20px auto; }
+        .n-header-bar { background: #000080; color: white; padding: 4px 8px; font-weight: bold; display: flex; justify-content: space-between; }
 
-        /* --- 1999: THE PORTAL --- */
-        #stage-1999 { background: #000066; background-image: radial-gradient(#0000aa 1px, transparent 1px); background-size: 20px 20px; }
-        .y2k-top { background: linear-gradient(180deg, #0000ff 0%, #000033 100%); border-bottom: 5px solid yellow; padding: 20px; text-align: center; }
-        .y2k-grid { display: grid; grid-template-columns: 200px 1fr; gap: 4px; padding: 4px; background: #000; }
-        .y2k-box { background: #fff; color: #000; padding: 20px; border: 4px outset #eee; }
+        /* --- 1999 --- */
+        #stage-1999 { background: #ff00ff; color: #000; font-family: 'Comic Sans MS', cursive; }
+        .y2k-container { background: #00ffff; border: 10px ridge #ffff00; padding: 20px; margin: 20px; }
+        .y2k-panel { background: #fff; border: 5px solid #000; padding: 15px; margin-bottom: 15px; box-shadow: 8px 8px 0px #000; }
 
-        /* --- 2012: AERO --- */
-        #stage-2012 { 
-            background: url('https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&q=80&w=2000') center/cover;
-        }
-        .aero-blur { 
-            position: absolute; inset: 0; background: rgba(255,255,255,0.2); backdrop-filter: blur(30px) saturate(150%);
-        }
-        .aero-container { position: relative; z-index: 2; padding: 80px 20px; max-width: 1000px; margin: 0 auto; text-align: center; }
-        .aero-card {
-            background: rgba(255, 255, 255, 0.4);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.6);
-            border-radius: 20px;
-            padding: 20px;
-            width: 220px;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        /* --- 2012 (Adjusted Brightness) --- */
+        #stage-2012 { background: #d8d8d8; color: #222; }
+        .aero-container { padding: 40px 20px; max-width: 1000px; margin: 0 auto; text-align: center; }
+        .aero-glass { 
+            background: rgba(255,255,255,0.4); 
+            backdrop-filter: blur(15px); 
+            border: 1px solid rgba(255,255,255,0.8); 
+            border-radius: 15px; 
+            padding: 40px; 
+            box-shadow: 0 8px 32px rgba(0,0,0,0.2); 
             color: #1a1a1a;
-            text-decoration: none;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 15px;
+            text-shadow: 0 1px 1px rgba(255,255,255,0.5);
         }
-        .aero-card:hover {
-            transform: translateY(-10px);
-            background: rgba(255, 255, 255, 0.6);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
-        }
-        .aero-icon-circle {
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            background: #fff;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 900;
-            font-size: 1.5rem;
-            box-shadow: inset 0 2px 5px rgba(0,0,0,0.1), 0 5px 15px rgba(0,0,0,0.05);
-        }
-        .aero-btn { 
-            background: linear-gradient(0deg, #0078d7 0%, #00aaff 100%); color: #fff; padding: 15px 40px; 
-            border-radius: 50px; border: 1px solid rgba(255,255,255,0.4); font-size: 1.2rem;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2), inset 0 2px 5px rgba(255,255,255,0.5);
-            margin-top: 40px;
+        .aero-btn {
+            margin-top: 15px; padding: 10px 25px; border-radius: 5px; 
+            background: linear-gradient(#fefefe, #ccc); border: 1px solid #888; 
+            cursor: pointer; font-weight: bold; color: #333;
         }
 
-        /* --- 2026: BENTO --- */
-        #stage-2026 { background: #050505; color: #fff; padding: 100px 10%; }
-        .bento-grid { display: grid; grid-template-columns: repeat(6, 1fr); grid-template-rows: repeat(2, 280px); gap: 20px; }
-        .bento-item { 
-            background: #0f0f0f; border-radius: 24px; border: 1px solid #222; padding: 32px; 
-            position: relative; overflow: hidden; transition: 0.5s cubic-bezier(0.2, 0, 0, 1);
-        }
-        .bento-item::before {
-            content: ''; position: absolute; inset: 0; background: radial-gradient(circle at var(--mx) var(--my), rgba(255,255,255,0.08) 0%, transparent 60%);
-            opacity: 0; transition: opacity 0.3s;
-        }
-        .bento-item:hover::before { opacity: 1; }
-        .bento-item:hover { border-color: #444; transform: translateY(-5px) scale(1.01); }
+        /* --- 2026 --- */
+        #stage-2026 { background: #050505; color: #fff; padding: 60px 5%; }
+        .bento-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 15px; }
+        .bento-item { background: #0f0f0f; border-radius: 20px; border: 1px solid #222; padding: 24px; transition: 0.3s; }
+        .bento-item:hover { border-color: #444; background: #151515; }
 
-        /* --- 2046: NEURAL --- */
-        #stage-2046 { background: #000; overflow: hidden; }
-        #neural-canvas { position: absolute; inset: 0; filter: blur(2px); }
-        .neural-content { 
-            position: relative; z-index: 2; height: 100vh; display: flex; flex-direction: column;
-            align-items: center; justify-content: center; text-align: center;
+        @media (max-width: 768px) {
+            .bento-grid { grid-template-columns: 1fr; }
+            .bento-item { grid-column: span 1 !important; }
         }
 
-        /* TOAST */
-        #toast { position: fixed; top: 30px; left: 50%; transform: translateX(-50%) translateY(-100px); background: #fff; color: #000; padding: 12px 30px; border-radius: 100px; font-weight: 900; transition: 0.5s; z-index: 2000000; }
-        #toast.active { transform: translateX(-50%) translateY(0); }
+        #toast {
+            position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%);
+            background: #fff; color: #000; padding: 8px 16px; border-radius: 4px;
+            font-family: 'JetBrains Mono'; font-size: 12px; opacity: 0; transition: 0.3s; pointer-events: none;
+            z-index: 9999999;
+        }
+        #toast.active { opacity: 1; }
     </style>
 </head>
 <body id="main-body">
+
+    <!-- LANDING -->
+    <div id="landing-page">
+        <h1 class="landing-title">TIME TRAVEL ENGINE</h1>
+        <p class="landing-subtitle">Initializing Temporal Core v4.1</p>
+        <div class="year-grid">
+            <button class="year-opt" onclick="enterSite('1991', 0)">1991</button>
+            <button class="year-opt" onclick="enterSite('1996', 1)">1996</button>
+            <button class="year-opt" onclick="enterSite('1999', 2)">1999</button>
+            <button class="year-opt" onclick="enterSite('2012', 3)">2012</button>
+            <button class="year-opt" onclick="enterSite('2026', 4)">2026</button>
+            <button class="year-opt" onclick="enterSite('2046', 5)">2046</button>
+        </div>
+    </div>
 
     <div id="cursor-follower"></div>
     <div id="cursor-dot"></div>
     <div id="toast">SYSTEM_COPIED</div>
 
-    <!-- 1991: THE TERMINAL -->
+    <!-- 1991 (Terminal) -->
     <div id="stage-1991" class="stage">
-        <div class="t-scanline"></div>
         <div id="t-output">
             <div>MORRIS_TERMINAL_REBOOT [OK]</div>
-            <div>VERIFYING AUTHENTICATION... ACCESS GRANTED</div>
-            <div>------------------------------------------</div>
-            <div>Welcome, Traveler.</div>
-            <div>CMD LIST: 'flight', 'nexa', 'socials', 'ping'</div>
+            <div>STATUS: Chronological data sync complete.</div>
+            <div>TYPE 'flight' to access FlightFeed Hub.</div>
+            <div>CMD LIST: 'about', 'nexa', 'flight', 'socials'</div>
         </div>
         <div style="display: flex; gap: 10px; margin-top: 20px;">
             <span>MORRIS@OS:~$</span>
-            <input type="text" id="t-input" autocomplete="off" autofocus style="background: transparent; border: none; color: inherit; font-family: inherit; font-size: inherit; outline: none; flex: 1;">
+            <input type="text" id="t-input" autocomplete="off" style="background: transparent; border: none; color: inherit; font-family: inherit; font-size: inherit; outline: none; flex: 1;">
         </div>
     </div>
 
-    <!-- 1996: NETSCAPE ERA -->
+    <!-- 1996 (Geocities Era) -->
     <div id="stage-1996" class="stage">
-        <div class="n-header">
-            <button onclick="resetEra()" style="background: #bfbfbf; border: 2px outset #eee; padding: 2px 10px;">Back</button>
-            <div style="flex:1; background: #fff; border: 2px inset #eee; padding: 2px 10px;">http://www.lawsonmorris.co.uk/home</div>
-            <img src="https://upload.wikimedia.org/wikipedia/commons/e/e4/Netscape_logo.svg" height="25" style="filter: grayscale(1);">
-        </div>
         <div class="n-card">
+            <div class="n-header-bar">Netscape Navigator - [Lawson Morris]</div>
             <center>
-                <img src="https://web.archive.org/web/20090830022416/http://geocities.com/Heartland/Plains/6701/undercon.gif">
-                <h1 style="font-size: 2.5rem; margin: 20px 0;">Lawson's Personal Web-Space</h1>
-                <p>Digital Craftsmanship & Drone Exploration</p>
-                <hr style="margin: 30px 0;">
-                <table width="100%" border="1" cellpadding="20" style="border-collapse: collapse; background: #eee;">
-                    <tr>
-                        <td align="center">
-                            <a href="https://flightfeed.uk" target="_blank" class="n-link">Visit FlightFeed.uk</a><br>
-                            Find places to fly.
-                        </td>
-                        <td align="center">
-                            <a href="https://nexa.lawsonmorris.co.uk" target="_blank" class="n-link">Nexa Studios</a><br>
-                            Artistic Endeavors.
-                        </td>
-                        <td align="center">
-                            <a href="https://lawsonmorris.co.uk/links" target="_blank" class="n-link">My Socials</a><br>
-                            Find me elsewhere.
-                        </td>
-                    </tr>
-                </table>
+                <img src="https://web.archive.org/web/20090830022416/http://geocities.com/Heartland/Plains/6701/undercon.gif" height="40">
+                <h1 style="border-bottom: 2px solid #000;">ABOUT ME</h1>
+                <p>Hello! I am a teen from the UK.</p>
+                <p style="padding: 10px; border: 2px dashed #000; margin: 10px;">I am a digital explorer interested in technology and flight. I enjoy building things on the web and flying drones!</p>
+                <hr>
+                <h2 style="color: blue;">FLIGHT FEED</h2>
+                <p>Track the skies here!</p>
+                <a href="https://flightfeed.uk" target="_blank"><b>[ ENTER FLIGHTFEED ]</b></a>
+                <hr>
+                <h2 style="color: blue;">NEXA STUDIOS (1996)</h2>
+                <p>Personal workshop for designing GIF animations and MIDI tracks.</p>
+                <a href="https://nexa.lawsonmorris.co.uk" target="_blank">Visit Nexa</a>
                 <br><br>
-                <button onclick="copyEmail()" style="font-size: 1.2rem; cursor: pointer; padding: 10px;">Send me an Email</button>
+                <img src="https://web.archive.org/web/20091024003350/http://geocities.com/athens/aegean/7027/ie_logo.gif" height="30">
             </center>
         </div>
     </div>
 
-    <!-- 1999: Y2K PORTAL -->
+    <!-- 1999 (Colorful Web 1.0) -->
     <div id="stage-1999" class="stage">
-        <div class="y2k-top">
-            <h1 style="color: yellow; font-size: 3rem; font-family: 'Comic Sans MS'; text-shadow: 3px 3px #f0f;">☆ LAWSON MORRIS PORTAL ☆</h1>
-        </div>
-        <div class="y2k-grid">
-            <div class="y2k-box" style="background: #ccc;">
-                <h4 style="border-bottom: 2px solid #000;">Web Directory</h4>
-                <ul style="padding: 15px; list-style: square;">
-                    <li><a href="https://flightfeed.uk" target="_blank">FlightFeed (Drone Hub)</a></li>
-                    <li><a href="https://nexa.lawsonmorris.co.uk" target="_blank">Nexa Studios</a></li>
-                    <li><a href="https://lawsonmorris.co.uk/links" target="_blank">Social Links</a></li>
-                    <li><a href="javascript:copyEmail()">Mail Me</a></li>
-                </ul>
-                <img src="https://web.archive.org/web/20091023134358/http://geocities.com/Athens/6134/netscape.gif" width="100%">
+        <div class="y2k-container">
+            <marquee scrollamount="10" style="background: #000; color: #0f0; font-weight: bold; font-family: monospace;">!!! WELCOME TO THE COLOR ZONE !!! WEB 1.0 IS HERE !!! TIME TRAVEL SUCCESSFUL !!!</marquee>
+            <div class="y2k-panel">
+                <h1 style="color: #ff00ff; text-shadow: 2px 2px #000;">☆ ABOUT ME ☆</h1>
+                <p>Welcome! I am a teen who loves all things digital. I fly drones, I code, and I create!</p>
             </div>
-            <div class="y2k-box">
-                <marquee direction="left" style="background: lime; font-weight: bold;">CONNECT WITH ME ON THE WEB -> LAWSONMORRIS.CO.UK/LINKS !!!</marquee>
-                <h2 style="margin: 20px 0;">Drone Piloting. Art. Digital.</h2>
-                <p>The dawn of the millennium is here. I am building the systems that will define the year 2000 and beyond.</p>
-                <div style="margin-top: 40px; text-align: center;">
-                    <img src="https://via.placeholder.com/468x60/ff00ff/ffffff?text=ADVERTISE+HERE" style="border: 2px solid #000;">
+            <div class="y2k-panel">
+                <h2 style="color: #00f; border-bottom: 2px solid #00f;">FLIGHT HUB</h2>
+                <p>Check out my latest drone missions and flight tracking!</p>
+                <button style="background: #ffff00; font-weight: bold; border: 3px solid #000; padding: 5px; cursor: pointer;" onclick="window.open('https://flightfeed.uk')">GO TO FLIGHTFEED.UK</button>
+            </div>
+            <div class="y2k-panel">
+                <h2 style="color: #00f; border-bottom: 2px solid #00f;">NEXA STUDIOS</h2>
+                <p>Bringing the HEAT to your browser! Experimental web layouts and high-speed rendering.</p>
+                <center>
+                    <button style="background: lime; font-weight: bold; padding: 10px; border: 4px outset #fff; cursor: pointer;" onclick="window.open('https://nexa.lawsonmorris.co.uk')">CLICK TO ENTER NEXA</button>
+                </center>
+            </div>
+            <center>
+                <img src="https://web.archive.org/web/20091023134358/http://geocities.com/Athens/6134/netscape.gif">
+            </center>
+        </div>
+    </div>
+
+    <!-- 2012 (Aero Minimalist - Improved Legibility) -->
+    <div id="stage-2012" class="stage">
+        <div class="aero-container">
+            <div class="aero-glass">
+                <h1 style="font-weight: 700; font-size: 3rem; margin-bottom: 10px;">Lawson Morris</h1>
+                <p style="margin: 10px 0; font-size: 1.3rem; font-weight: 600;">I am a teen creative based in the UK.</p>
+                <p style="opacity: 0.9; line-height: 1.6; max-width: 600px; margin: 0 auto; font-weight: 400;">Focused on the intersection of drone technology and digital production. I build clean, minimalist experiences through Nexa Studios and manage FlightFeed.</p>
+                
+                <div style="display: flex; justify-content: center; gap: 15px; margin-top: 30px;">
+                    <button class="aero-btn" onclick="window.open('https://flightfeed.uk')">Launch FlightFeed</button>
+                    <button class="aero-btn" onclick="window.open('https://nexa.lawsonmorris.co.uk')">Visit Nexa Studios</button>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- 2012: AERO ERA -->
-    <div id="stage-2012" class="stage">
-        <div class="aero-blur"></div>
-        <div class="aero-container">
-            <h1 style="font-size: 5rem; font-weight: 300; letter-spacing: -2px; margin-bottom: 10px; color: #1a1a1a;">Pure Design.</h1>
-            <p style="font-size: 1.5rem; color: #555; margin-bottom: 50px;">Merging technical drone data with elegant visual interfaces.</p>
-            
-            <div style="display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;">
-                <!-- FlightFeed Card -->
-                <a href="https://flightfeed.uk" target="_blank" class="aero-card">
-                    <div class="aero-icon-circle" style="color: #0078d7;">FF</div>
-                    <div style="text-align: center;">
-                        <div style="font-weight: 700; font-size: 1.1rem;">Flight Feed</div>
-                        <div style="font-size: 0.8rem; opacity: 0.6;">Drone Locations</div>
-                    </div>
-                </a>
-
-                <!-- Nexa Studios Card -->
-                <a href="https://nexa.lawsonmorris.co.uk" target="_blank" class="aero-card">
-                    <div class="aero-icon-circle" style="color: #ff2d95;">NS</div>
-                    <div style="text-align: center;">
-                        <div style="font-weight: 700; font-size: 1.1rem;">Nexa Studios</div>
-                        <div style="font-size: 0.8rem; opacity: 0.6;">Visual Arts</div>
-                    </div>
-                </a>
-
-                <!-- Socials Card -->
-                <a href="https://lawsonmorris.co.uk/links" target="_blank" class="aero-card">
-                    <div class="aero-icon-circle" style="color: #333;">@</div>
-                    <div style="text-align: center;">
-                        <div style="font-weight: 700; font-size: 1.1rem;">Socials</div>
-                        <div style="font-size: 0.8rem; opacity: 0.6;">Connect with me</div>
-                    </div>
-                </a>
-            </div>
-
-            <button class="aero-btn" onclick="copyEmail()">Contact Lawson</button>
-        </div>
-    </div>
-
-    <!-- 2026: BENTO MODERN -->
+    <!-- 2026 (Bento Grid) -->
     <div id="stage-2026" class="stage">
-        <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 60px;">
-            <div>
-                <h1 style="font-size: 6rem; font-weight: 900; letter-spacing: -6px; line-height: 0.9;">LAWSON<br>MORRIS</h1>
-            </div>
-            <div style="text-align: right;">
-                <p style="opacity: 0.4;">EST. 2012</p>
-                <p style="font-weight: 700; letter-spacing: 2px;">CREATIVE LEAD</p>
-            </div>
-        </div>
+        <h1 style="font-size: 5rem; font-weight: 900; letter-spacing: -4px; margin-bottom: 40px;">LAWSON.</h1>
         <div class="bento-grid">
-            <div class="bento-item" style="grid-column: span 4; grid-row: span 1;" onclick="window.open('https://flightfeed.uk')">
-                <h2 style="font-size: 3rem; margin-bottom: 10px;">Flight Feed</h2>
-                <p style="opacity: 0.5;">A dedicated hub for drone pilots to discover launch locations.</p>
+            <div class="bento-item" style="grid-column: span 3; background: #fff; color: #000;">
+                <h2>About Me</h2>
+                <p style="margin-top: 15px; font-weight: 600;">I am a teen.</p>
+                <p style="margin-top: 10px; opacity: 0.7;">UK-based creator specializing in drone logistics and artistic direction. Building tools for the next generation of digital pilots.</p>
             </div>
-            <div class="bento-item" style="grid-column: span 2; grid-row: span 2; background: #ff2d95; color: #000;" onclick="copyEmail()">
-                <h2 style="font-size: 2.5rem;">Let's Talk.</h2>
-                <p style="margin-top: 20px;">hey@lawsonmorris.co.uk</p>
+            <div class="bento-item" style="grid-column: span 3; background: linear-gradient(45deg, #111, #222);">
+                <h2 style="color: #ff2d95;">Nexa Studios</h2>
+                <p style="margin-top: 15px; opacity: 0.6; line-height: 1.6;">Technical art and creative direction. Bridging the gap between drone data and cinema.</p>
+                <a href="https://nexa.lawsonmorris.co.uk" target="_blank" style="display: inline-block; margin-top: 20px; color: #fff; text-decoration: none;">Visit Studio →</a>
             </div>
-            <div class="bento-item" style="grid-column: span 2;" onclick="window.open('https://nexa.lawsonmorris.co.uk')">
-                <h3>Nexa Studios</h3>
-                <p style="font-size: 0.8rem; margin-top: 10px; opacity: 0.5;">Artistic direction and production.</p>
+            <div class="bento-item" style="grid-column: span 2; background: #00f2ff; color: #000;" onclick="copyEmail()">
+                <h2>Hire Me</h2>
+                <p style="font-weight: bold;">hey@lawsonmorris.co.uk</p>
+            </div>
+            <div class="bento-item" style="grid-column: span 2; background: #222;" onclick="window.open('https://flightfeed.uk')">
+                <h3 style="color: #00f2ff;">Flight Feed</h3>
+                <p style="opacity: 0.5;">Drone Logistics Hub</p>
             </div>
             <div class="bento-item" style="grid-column: span 2;" onclick="window.open('https://lawsonmorris.co.uk/links')">
                 <h3>Connect</h3>
-                <p style="font-size: 0.8rem; margin-top: 10px; opacity: 0.5;">Socials & links directory.</p>
+                <p style="opacity: 0.5;">Social Networks</p>
             </div>
         </div>
     </div>
 
-    <!-- 2046: NEURAL DRIFT -->
+    <!-- 2046 (Neural Field) -->
     <div id="stage-2046" class="stage">
         <canvas id="neural-canvas"></canvas>
-        <div class="neural-content">
-            <h1 style="font-size: 10rem; font-family: 'Space Grotesk'; letter-spacing: -10px; opacity: 0.8;">EVOLVE</h1>
-            <div style="display: flex; gap: 40px; margin-top: 40px;">
-                <a href="https://flightfeed.uk" target="_blank" style="color: #00f2ff; text-decoration: none; font-size: 1.2rem; letter-spacing: 5px;">FLIGHT_GRID</a>
-                <a href="https://nexa.lawsonmorris.co.uk" target="_blank" style="color: #00f2ff; text-decoration: none; font-size: 1.2rem; letter-spacing: 5px;">NEXA_VOID</a>
-                <a href="https://lawsonmorris.co.uk/links" target="_blank" style="color: #00f2ff; text-decoration: none; font-size: 1.2rem; letter-spacing: 5px;">SOCIAL_NODES</a>
-                <span onclick="copyEmail()" style="color: #00f2ff; cursor: pointer; font-size: 1.2rem; letter-spacing: 5px;">SYNC_CONTACT</span>
+        <div style="position: relative; z-index: 2; height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;">
+            <h1 style="font-size: 8vw; letter-spacing: -5px; color: #00f2ff;">IDENTITY_CORE</h1>
+            <p style="max-width: 600px; padding: 20px; font-family: 'Space Grotesk'; text-transform: uppercase; letter-spacing: 4px;">USER: LAWSON MORRIS // STATUS: TEEN CREATIVE // SECTOR: UK DIGITAL SKY // FLIGHTFEED_LINK: ACTIVE</p>
+            <div style="display: flex; gap: 20px;">
+                <button onclick="window.open('https://flightfeed.uk')" style="background: #00f2ff; color: #000; border: none; padding: 15px 40px; font-weight: 900; cursor: pointer;">FLIGHT_FEED</button>
+                <button onclick="window.open('https://nexa.lawsonmorris.co.uk')" style="background: transparent; color: #00f2ff; border: 1px solid #00f2ff; padding: 15px 40px; font-weight: 900; cursor: pointer;">NEXA_STUDIOS</button>
             </div>
         </div>
     </div>
 
-    <!-- RE-DESIGNED CONTROLS -->
+    <!-- CONTROLS -->
     <div class="time-traveler-container">
-        <div class="nav-label" id="nav-label-year">Active Temporal Vector</div>
+        <div class="nav-label" id="nav-label-year">Vector Active</div>
         <div class="time-traveler">
             <div class="nav-indicator" id="nav-indicator"></div>
             <button class="time-btn" onclick="setEra('1991', 0)">91</button>
@@ -416,60 +367,40 @@
     <script>
         const dot = document.getElementById('cursor-dot');
         const ring = document.getElementById('cursor-follower');
-        const body = document.getElementById('main-body');
         const stages = document.querySelectorAll('.stage');
         const buttons = document.querySelectorAll('.time-btn');
         const indicator = document.getElementById('nav-indicator');
         const navLabel = document.getElementById('nav-label-year');
         
-        let mouseX = 0, mouseY = 0;
-        let ringX = 0, ringY = 0;
+        let mouseX = 0, mouseY = 0, ringX = 0, ringY = 0;
         let currentEra = '2026';
 
-        document.addEventListener('mousemove', (e) => {
-            mouseX = e.clientX;
-            mouseY = e.clientY;
-            dot.style.left = mouseX + 'px';
-            dot.style.top = mouseY + 'px';
+        function enterSite(era, index) {
+            document.body.classList.add('site-entered');
+            document.getElementById('landing-page').classList.add('hidden');
+            setEra(era, index);
+        }
 
-            if(currentEra === '2026') {
-                document.querySelectorAll('.bento-item').forEach(item => {
-                    const rect = item.getBoundingClientRect();
-                    item.style.setProperty('--mx', `${mouseX - rect.left}px`);
-                    item.style.setProperty('--my', `${mouseY - rect.top}px`);
-                });
-            }
+        document.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX; mouseY = e.clientY;
+            dot.style.left = mouseX + 'px'; dot.style.top = mouseY + 'px';
         });
 
         const animateRing = () => {
-            const ease = 0.15;
-            ringX += (mouseX - ringX) * ease;
-            ringY += (mouseY - ringY) * ease;
-            ring.style.left = ringX + 'px';
-            ring.style.top = ringY + 'px';
+            ringX += (mouseX - ringX) * 0.15;
+            ringY += (mouseY - ringY) * 0.15;
+            ring.style.left = ringX + 'px'; ring.style.top = ringY + 'px';
             requestAnimationFrame(animateRing);
         }
         animateRing();
-
-        document.addEventListener('mousedown', () => body.classList.add('clicking'));
-        document.addEventListener('mouseup', () => body.classList.remove('clicking'));
-
-        document.addEventListener('mouseover', e => {
-            if(e.target.tagName === 'A' || e.target.tagName === 'BUTTON' || e.target.closest('.bento-item') || e.target.closest('.aero-card')) {
-                body.classList.add('hovering');
-            }
-        });
-        document.addEventListener('mouseout', e => body.classList.remove('hovering'));
 
         function setEra(era, index) {
             currentEra = era;
             stages.forEach(s => s.classList.remove('active'));
             document.getElementById(`stage-${era}`).classList.add('active');
             
-            indicator.style.transform = `translateX(${index * 55}px)`;
+            indicator.style.transform = `translateX(${index * (indicator.parentElement.offsetWidth - 8) / 6}px)`;
             navLabel.innerText = `TEMPORAL_VECTOR: ${era}`;
-            navLabel.style.opacity = '0.8';
-            setTimeout(() => navLabel.style.opacity = '0.4', 1000);
 
             buttons.forEach((b, i) => {
                 b.classList.remove('selected');
@@ -479,8 +410,8 @@
             const themes = {
                 '1991': { cursor: '#3df33d', bg: '#0a0e0a', navBg: 'rgba(0,0,0,0.8)', indicator: '#3df33d' },
                 '1996': { cursor: '#000', bg: '#bfbfbf', navBg: 'rgba(128,128,128,0.2)', indicator: '#000' },
-                '1999': { cursor: '#ffff00', bg: '#000066', navBg: 'rgba(0,0,255,0.3)', indicator: '#ffff00' },
-                '2012': { cursor: '#0078d7', bg: '#f0f0f0', navBg: 'rgba(255,255,255,0.4)', indicator: '#0078d7' },
+                '1999': { cursor: '#00ffff', bg: '#ff00ff', navBg: 'rgba(255,255,0,0.5)', indicator: '#00ffff' },
+                '2012': { cursor: '#0078d7', bg: '#d8d8d8', navBg: 'rgba(255,255,255,0.4)', indicator: '#0078d7' },
                 '2026': { cursor: '#fff', bg: '#050505', navBg: 'rgba(255,255,255,0.05)', indicator: '#fff' },
                 '2046': { cursor: '#00f2ff', bg: '#000', navBg: 'rgba(0,0,0,0.9)', indicator: '#00f2ff' }
             };
@@ -489,10 +420,11 @@
             document.documentElement.style.setProperty('--cursor-color', theme.cursor);
             document.documentElement.style.setProperty('--nav-bg', theme.navBg);
             indicator.style.background = theme.indicator;
-            indicator.style.boxShadow = `0 4px 15px ${theme.indicator}44`;
             document.body.style.background = theme.bg;
 
-            if(era === '1991') document.getElementById('t-input').focus();
+            if(era === '1991') {
+                setTimeout(() => document.getElementById('t-input').focus(), 100);
+            }
             if(era === '2046') initNeuralField();
         }
 
@@ -505,31 +437,44 @@
                 line.innerHTML = `> ${cmd}`;
                 tOutput.appendChild(line);
 
-                if(cmd === 'flight') window.open('https://flightfeed.uk');
-                else if(cmd === 'nexa') window.open('https://nexa.lawsonmorris.co.uk');
-                else if(cmd === 'socials') window.open('https://lawsonmorris.co.uk/links');
-                else if(cmd === 'ping') {
+                if(cmd === 'about') {
                     const l = document.createElement('div');
-                    l.innerText = 'PONG: 64ms latency to Morris-Core...';
+                    l.innerText = 'MORRIS_BIO: I am a teen. UK-based creator and drone pilot.';
                     tOutput.appendChild(l);
-                } else {
+                } else if(cmd === 'nexa') {
                     const l = document.createElement('div');
-                    l.innerText = `ERROR: Command '${cmd}' not found.`;
+                    l.innerText = 'ACCESSING NEXA_STUDIOS...';
                     tOutput.appendChild(l);
-                }
+                    setTimeout(() => window.open('https://nexa.lawsonmorris.co.uk'), 500);
+                } else if(cmd === 'flight') {
+                    const l = document.createElement('div');
+                    l.innerText = 'REDIRECTING TO FLIGHTFEED_HUB...';
+                    tOutput.appendChild(l);
+                    setTimeout(() => window.open('https://flightfeed.uk'), 500);
+                } else if(cmd === 'socials') window.open('https://lawsonmorris.co.uk/links');
+                
                 tInput.value = '';
                 document.getElementById('stage-1991').scrollTop = document.getElementById('stage-1991').scrollHeight;
             }
         });
 
+        function copyEmail() {
+            const el = document.createElement('textarea');
+            el.value = "hey@lawsonmorris.co.uk"; document.body.appendChild(el);
+            el.select(); document.execCommand('copy');
+            document.body.removeChild(el);
+            const toast = document.getElementById('toast');
+            toast.classList.add('active');
+            setTimeout(() => toast.classList.remove('active'), 2500);
+        }
+
         function initNeuralField() {
             const canvas = document.getElementById('neural-canvas');
+            if(!canvas) return;
             const ctx = canvas.getContext('2d');
             let particles = [];
             const resize = () => { canvas.width = window.innerWidth; canvas.height = window.innerHeight; };
-            window.addEventListener('resize', resize);
             resize();
-
             class P {
                 constructor() { this.reset(); }
                 reset() {
@@ -544,38 +489,22 @@
                     if(this.y < 0 || this.y > canvas.height) this.vy *= -1;
                 }
             }
-            for(let i=0; i<80; i++) particles.push(new P());
+            for(let i=0; i<50; i++) particles.push(new P());
             function draw() {
                 if(currentEra !== '2046') return;
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
                 ctx.strokeStyle = 'rgba(0, 242, 255, 0.2)';
-                ctx.lineWidth = 1;
                 particles.forEach((p, i) => {
                     p.update();
                     particles.slice(i+1).forEach(p2 => {
                         const d = Math.hypot(p.x - p2.x, p.y - p2.y);
-                        if(d < 150) {
-                            ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(p2.x, p2.y); ctx.stroke();
-                        }
+                        if(d < 150) { ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(p2.x, p2.y); ctx.stroke(); }
                     });
                 });
                 requestAnimationFrame(draw);
             }
             draw();
         }
-
-        function copyEmail() {
-            const email = "hey@lawsonmorris.co.uk";
-            const el = document.createElement('textarea');
-            el.value = email; document.body.appendChild(el);
-            el.select(); document.execCommand('copy');
-            document.body.removeChild(el);
-            const toast = document.getElementById('toast');
-            toast.classList.add('active');
-            setTimeout(() => toast.classList.remove('active'), 2500);
-        }
-        function resetEra() { setEra('2026', 4); }
-        setEra('2026', 4);
     </script>
 </body>
 </html>
