@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>St John Ambulance Cymru - First Aid Manual 11th Edition</title>
+    <!-- PDF.js library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        :root {
+            --st-john-green: #005a3c;
+            --bg-color: #121212;
+            --panel-color: #1e1e1e;
+            --accent-color: #ffffff;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            margin: 0;
+            overflow: hidden;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            color: white;
+            touch-action: none;
+        }
+
+        #viewer-container {
+            position: absolute;
+            top: 60px;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            overflow: auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: var(--bg-color);
+            scrollbar-width: thin;
+            scrollbar-color: #444 transparent;
+            padding-bottom: 40px;
+        }
+
+        .toolbar {
+            height: 60px;
+            background-color: var(--st-john-green);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 16px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+            z-index: 100;
+        }
+
+        .btn {
+            background: rgba(255, 255, 255, 0.15);
+            border: none;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.875rem;
+        }
+
+        .btn:hover {
+            background: rgba(255, 255, 255, 0.25);
+        }
+
+        .btn-download {
+            background: #ffffff;
+            color: var(--st-john-green);
+            font-weight: 600;
+        }
+
+        .btn-download:hover {
+            background: #f0f0f0;
+            transform: translateY(-1px);
+        }
+
+        canvas {
+            margin: 20px auto;
+            box-shadow: 0 0 30px rgba(0,0,0,0.7);
+            max-width: 95%;
+        }
+
+        #loading-overlay {
+            position: fixed;
+            inset: 0;
+            background: var(--bg-color);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid rgba(255,255,255,0.1);
+            border-top: 4px solid white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        @media (max-width: 768px) {
+            .hide-mobile { display: none; }
+            .toolbar h1 { font-size: 0.9rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="loading-overlay">
+        <div class="spinner"></div>
+        <p class="mt-6 font-semibold text-lg tracking-wide">ST JOHN AMBULANCE CYMRU</p>
+        <p class="text-sm opacity-60">11th Edition Manual</p>
+    </div>
+
+    <header class="toolbar">
+        <div class="flex items-center gap-3">
+            <div class="w-8 h-8 bg-white rounded-full flex items-center justify-center">
+                <svg viewBox="0 0 100 100" class="w-6 h-6 text-[#005a3c]" fill="currentColor">
+                    <path d="M50 5 L95 50 L50 95 L5 50 Z M50 20 L35 50 L50 80 L65 50 Z" />
+                </svg>
+            </div>
+            <h1 class="font-bold tracking-tight">ST JOHN CYMRU</h1>
+        </div>
+
+        <div class="flex items-center gap-2">
+            <button class="btn" id="prev-page" title="Previous Page">
+                <svg width="20" height="20" fill="currentColor" viewBox="0 0 20 20"><path d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"/></svg>
+            </button>
+            
+            <div class="px-2 font-mono text-sm tabular-nums">
+                <span id="page-num">1</span> / <span id="page-count">-</span>
+            </div>
+
+            <button class="btn" id="next-page" title="Next Page">
+                <svg width="20" height="20" fill="currentColor" viewBox="0 0 20 20"><path d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"/></svg>
+            </button>
+        </div>
+
+        <div class="flex items-center gap-2">
+            <button class="btn btn-download" id="download-btn">
+                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+                <span class="hide-mobile">Download</span>
+            </button>
+            <button class="btn hide-mobile" id="fullscreen-btn">
+                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"/></svg>
+            </button>
+        </div>
+    </header>
+
+    <div id="viewer-container">
+        <canvas id="pdf-canvas"></canvas>
+    </div>
+
+    <script>
+        const originalUrl = '766993915-DK-First-Aid-Manual-Eleventh-Edition-UK-2021.pdf';
+        const downloadName = 'st-john-11th-edition-manual-lawsonmorris.co.uk.pdf';
+
+        let pdfDoc = null,
+            pageNum = 1,
+            pageRendering = false,
+            pageNumPending = null,
+            scale = window.innerWidth < 768 ? 0.7 : 1.3,
+            canvas = document.getElementById('pdf-canvas'),
+            ctx = canvas.getContext('2d');
+
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
+        function renderPage(num) {
+            pageRendering = true;
+            pdfDoc.getPage(num).then(function(page) {
+                const viewport = page.getViewport({ scale: scale });
+                canvas.height = viewport.height;
+                canvas.width = viewport.width;
+
+                const renderContext = {
+                    canvasContext: ctx,
+                    viewport: viewport
+                };
+                const renderTask = page.render(renderContext);
+
+                renderTask.promise.then(function() {
+                    pageRendering = false;
+                    if (pageNumPending !== null) {
+                        renderPage(pageNumPending);
+                        pageNumPending = null;
+                    }
+                });
+            });
+
+            document.getElementById('page-num').textContent = num;
+        }
+
+        function queueRenderPage(num) {
+            if (pageRendering) {
+                pageNumPending = num;
+            } else {
+                renderPage(num);
+            }
+        }
+
+        function onPrevPage() {
+            if (pageNum <= 1) return;
+            pageNum--;
+            queueRenderPage(pageNum);
+        }
+
+        function onNextPage() {
+            if (pageNum >= pdfDoc.numPages) return;
+            pageNum++;
+            queueRenderPage(pageNum);
+        }
+
+        // Custom Download Handler
+        document.getElementById('download-btn').addEventListener('click', async () => {
+            try {
+                const response = await fetch(originalUrl);
+                const blob = await response.blob();
+                const blobUrl = window.URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.href = blobUrl;
+                link.download = downloadName;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                window.URL.revokeObjectURL(blobUrl);
+            } catch (err) {
+                console.error("Download failed", err);
+                // Fallback for simple direct link
+                const link = document.createElement('a');
+                link.href = originalUrl;
+                link.download = downloadName;
+                link.click();
+            }
+        });
+
+        document.getElementById('fullscreen-btn').addEventListener('click', () => {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen();
+            } else {
+                document.exitFullscreen();
+            }
+        });
+
+        // Swipe & Navigation
+        let touchstartX = 0;
+        let touchendX = 0;
+        const container = document.getElementById('viewer-container');
+
+        container.addEventListener('touchstart', e => { touchstartX = e.changedTouches[0].screenX; }, { passive: true });
+        container.addEventListener('touchend', e => { 
+            touchendX = e.changedTouches[0].screenX;
+            if (touchendX < touchstartX - 60) onNextPage();
+            if (touchendX > touchstartX + 60) onPrevPage();
+        }, { passive: true });
+
+        window.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === ' ') onNextPage();
+            if (e.key === 'ArrowLeft') onPrevPage();
+        });
+
+        // Load Doc
+        pdfjsLib.getDocument(originalUrl).promise.then(function(pdfDoc_) {
+            pdfDoc = pdfDoc_;
+            document.getElementById('page-count').textContent = pdfDoc.numPages;
+            renderPage(pageNum);
+            document.getElementById('loading-overlay').style.display = 'none';
+        }).catch(err => {
+            const overlay = document.getElementById('loading-overlay');
+            overlay.innerHTML = `<p class="text-red-400 p-4 text-center">Failed to load: ${originalUrl}<br><small>Ensure file is in the same directory.</small></p>`;
+        });
+
+        document.getElementById('prev-page').addEventListener('click', onPrevPage);
+        document.getElementById('next-page').addEventListener('click', onNextPage);
+    </script>
+</body>
+</html>
