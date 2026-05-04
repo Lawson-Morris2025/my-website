@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Lawson Morris | 13-Year Old Web Developer</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -19,6 +19,7 @@
         * {
             box-sizing: border-box;
             -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
         }
 
         body {
@@ -28,6 +29,13 @@
             overflow-x: hidden;
             scroll-behavior: smooth;
             line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        html, body {
+            width: 100%;
+            margin: 0;
+            padding: 0;
         }
 
         @keyframes float {
@@ -35,6 +43,385 @@
             50% { transform: translateY(-10px); }
             100% { transform: translateY(0px); }
         }
+        .animate-float { animation: float 3s ease-in-out infinite; }
+
+        .gradient-text {
+            background: linear-gradient(to right, #60a5fa, #a855f7, #ec4899);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-size: 200% auto;
+            animation: textGradient 4s linear infinite;
+        }
+
+        @keyframes textGradient {
+            to { background-position: 200% center; }
+        }
+
+        .bento-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        @media (hover: hover) {
+            .bento-card:hover {
+                border-color: rgba(59, 130, 246, 0.5);
+                background: #0f0f0f;
+                transform: scale(1.02);
+            }
+        }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .glass-nav {
+            background: rgba(5, 5, 5, 0.85);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .nav-profile {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            position: relative;
+            padding: 2px;
+            background: linear-gradient(45deg, #3b82f6, #a855f7, #ec4899);
+            background-size: 300% 300%;
+            animation: gradientMove 3s ease infinite;
+        }
+
+        @keyframes gradientMove {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .nav-profile img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--bg-dark);
+        }
+
+        .chip {
+            background: rgba(59, 130, 246, 0.1);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            padding: 4px 10px;
+            border-radius: 100px;
+            font-size: 0.65rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: #60a5fa;
+            width: fit-content;
+        }
+
+        .bg-blob {
+            position: fixed;
+            width: 80vw;
+            height: 80vw;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.1;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        #progress {
+            position: fixed;
+            top: 0; left: 0; height: 3px;
+            background: linear-gradient(to right, #3b82f6, #a855f7, #ec4899);
+            z-index: 1001;
+            width: 0%;
+        }
+
+        #toast {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: #3b82f6;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 16px;
+            font-weight: 700;
+            font-size: 0.875rem;
+            box-shadow: 0 10px 30px rgba(59, 130, 246, 0.3);
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: 2000;
+            width: max-content;
+        }
+        #toast.show { transform: translateX(-50%) translateY(0); }
+    </style>
+</head>
+<body>
+
+    <div id="progress"></div>
+    <div id="toast">Email Copied! 🚀</div>
+
+    <!-- Navigation -->
+    <nav class="fixed top-0 w-full z-50 glass-nav">
+        <div class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="nav-profile" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
+                    <img src="me animated.png" alt="Lawson Morris" onerror="this.src='https://ui-avatars.com/api/?name=Lawson+Morris&background=3b82f6&color=fff'">
+                </div>
+                <div class="flex flex-col">
+                    <span class="text-base font-black tracking-tighter leading-none">LAWSON<span class="text-blue-500">MORRIS</span></span>
+                    <span class="text-[8px] text-gray-500 font-black tracking-widest uppercase mt-0.5">Dev</span>
+                </div>
+            </div>
+            
+            <div class="hidden sm:flex space-x-6 text-[9px] font-black uppercase tracking-widest text-gray-400">
+                <a href="#work" class="hover:text-white transition-colors">Work</a>
+                <a href="#socials" class="hover:text-white transition-colors">Presence</a>
+                <a href="#contact" class="hover:text-white transition-colors">Contact</a>
+            </div>
+            
+            <div class="flex items-center gap-2 sm:gap-4">
+                <!-- Top Bar Socials -->
+                <div class="hidden md:flex items-center gap-3 mr-2 border-r border-white/10 pr-4">
+                    <a href="https://www.tiktok.com/@lawson.morris4" target="_blank" class="text-gray-400 hover:text-white transition-colors text-sm"><i class="fa-brands fa-tiktok"></i></a>
+                    <a href="https://www.instagram.com/lawso.morris9277" target="_blank" class="text-gray-400 hover:text-white transition-colors text-sm"><i class="fa-brands fa-instagram"></i></a>
+                </div>
+                <a href="#contact" class="px-4 py-2 bg-blue-600 text-white rounded-lg text-[9px] font-black uppercase tracking-wider active:scale-95 transition-all">Connect</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="min-h-screen flex flex-col justify-center px-6 pt-16 relative overflow-hidden">
+        <div class="bg-blob bg-blue-600 top-[-10%] right-[-10%]" id="blob-1"></div>
+        <div class="bg-blob bg-purple-600 bottom-[-10%] left-[-10%]" id="blob-2"></div>
+
+        <div class="max-w-4xl mx-auto text-center">
+            <div class="reveal inline-block mb-6">
+                <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-white text-[9px] font-bold tracking-widest uppercase">
+                    <span class="relative flex h-1.5 w-1.5">
+                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
+                        <span class="relative inline-flex rounded-full h-1.5 w-1.5 bg-blue-500"></span>
+                    </span>
+                    Ready to build
+                </div>
+            </div>
+            <h1 class="text-6xl sm:text-7xl md:text-8xl font-black mb-6 leading-[0.95] tracking-tighter reveal">
+                Hi, I'm <span class="gradient-text">Lawson.</span>
+            </h1>
+            <p class="text-gray-400 text-base sm:text-xl max-w-xl mx-auto mb-10 leading-relaxed font-normal reveal">
+                A 13-year-old developer based in the UK. I specialize in building <span class="text-white">clean</span>, <span class="text-white">modern</span> web experiences.
+            </p>
+            <div class="flex flex-col sm:flex-row justify-center gap-3 reveal">
+                <a href="#work" class="px-8 py-4 bg-white text-black font-black rounded-xl text-sm active:scale-95 transition-all">View Projects</a>
+                <button onclick="copyEmail()" class="px-8 py-4 border border-white/10 font-black rounded-xl text-sm transition-all bg-white/5 flex items-center justify-center gap-2 active:scale-95">
+                    Email Me <i class="fa-solid fa-copy text-[10px] opacity-40"></i>
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Projects Section -->
+    <section id="work" class="py-20 px-4 max-w-6xl mx-auto">
+        <div class="mb-12 reveal">
+            <h2 class="text-4xl font-black tracking-tighter mb-2 uppercase">Projects</h2>
+            <div class="h-1 w-16 bg-blue-600"></div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div class="md:col-span-2 bento-card rounded-2xl p-6 sm:p-8 reveal">
+                <div class="flex flex-col sm:flex-row h-full justify-between items-start gap-6">
+                    <div class="flex-1">
+                        <span class="chip mb-4">Live Production</span>
+                        <h3 class="text-2xl font-black mb-2">lawsonmorris.co.uk</h3>
+                        <p class="text-gray-400 text-sm leading-relaxed max-w-sm mb-6">My main portfolio site showcasing my latest experiments and front-end skills.</p>
+                        <a href="https://lawsonmorris.co.uk" target="_blank" class="inline-flex items-center gap-2 text-xs font-black uppercase text-blue-500">
+                            Visit Site <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bento-card rounded-2xl p-6 reveal">
+                <div class="flex justify-between items-start mb-6">
+                    <span class="chip">Lab</span>
+                    <i class="fa-solid fa-fire text-orange-500 text-xl animate-pulse"></i>
+                </div>
+                <h3 class="text-xl font-black mb-2">Nexa</h3>
+                <p class="text-gray-500 text-xs mb-6">Experiments with 3D animations and UI interaction design.</p>
+                <a href="https://nexa.lawsonmorris.co.uk" target="_blank" class="text-xs font-black text-blue-500 mt-auto">Open Lab →</a>
+            </div>
+
+            <div class="bento-card rounded-2xl p-6 reveal">
+                <div class="flex justify-between items-start mb-6">
+                    <span class="chip">Utility</span>
+                    <i class="fa-solid fa-plane-up text-blue-400 text-xl animate-float"></i>
+                </div>
+                <h3 class="text-xl font-black mb-2">FlightFeed</h3>
+                <p class="text-gray-500 text-xs mb-6">Real-time drone flight map specifically for UK pilots.</p>
+                <a href="https://flightfeed.uk" target="_blank" class="text-xs font-black text-blue-500 mt-auto">View Map →</a>
+            </div>
+
+            <div class="md:col-span-2 bento-card rounded-2xl p-8 reveal bg-blue-600/5">
+                <div class="grid grid-cols-3 gap-2 text-center h-full items-center">
+                    <div>
+                        <p class="text-2xl font-black gradient-text">13</p>
+                        <p class="text-[8px] text-gray-500 uppercase font-bold tracking-tighter">Age</p>
+                    </div>
+                    <div>
+                        <p class="text-2xl font-black text-white">UK</p>
+                        <p class="text-[8px] text-gray-500 uppercase font-bold tracking-tighter">Based</p>
+                    </div>
+                    <div>
+                        <p class="text-2xl font-black text-blue-500">24/7</h3>
+                        <p class="text-[8px] text-gray-500 uppercase font-bold tracking-tighter">Learning</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Socials Section -->
+    <section id="socials" class="py-20 px-4 max-w-6xl mx-auto">
+        <div class="mb-12 reveal">
+            <h2 class="text-4xl font-black tracking-tighter mb-2 uppercase">Find Me</h2>
+            <div class="h-1 w-16 bg-pink-500"></div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+            <a href="https://www.tiktok.com/@lawson.morris4" target="_blank" class="bento-card rounded-2xl p-6 reveal active:scale-95 transition-transform">
+                <div class="flex items-center gap-4">
+                    <div class="w-10 h-10 rounded-xl bg-black border border-white/10 flex items-center justify-center text-lg">
+                        <i class="fa-brands fa-tiktok"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-black">TikTok</h3>
+                        <p class="text-[10px] text-gray-500 uppercase">@lawson.morris4</p>
+                    </div>
+                </div>
+            </a>
+
+            <a href="https://www.instagram.com/lawso.morris9277" target="_blank" class="bento-card rounded-2xl p-6 reveal active:scale-95 transition-transform">
+                <div class="flex items-center gap-4">
+                    <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-[#f9ce34] via-[#ee2a7b] to-[#6228d7] flex items-center justify-center text-lg">
+                        <i class="fa-brands fa-instagram"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-black">Instagram</h3>
+                        <p class="text-[10px] text-gray-500 uppercase">@lawso.morris9277</p>
+                    </div>
+                </div>
+            </a>
+
+            <div class="bento-card rounded-2xl p-6 reveal">
+                <div class="flex items-center gap-4">
+                    <div class="w-10 h-10 rounded-xl bg-green-600 flex items-center justify-center text-lg">
+                        <i class="fa-solid fa-box-open"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-black">Geocaching</h3>
+                        <p class="text-[10px] text-gray-500 uppercase">Hidden Finds</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Content -->
+    <section class="py-20 px-6 bg-[#070707]">
+        <div class="max-w-4xl mx-auto">
+            <div class="reveal">
+                <h2 class="text-4xl font-black mb-6 leading-tight">Beyond the <span class="text-blue-500">Screen.</span></h2>
+                <p class="text-gray-400 text-base mb-6">
+                    Coding isn't my only obsession. I'm an avid geocacher and a licensed drone pilot. I find that the same logic used to find hidden caches or navigate a drone helps me write cleaner code.
+                </p>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-12">
+                    <div class="p-4 rounded-xl bg-white/5 border border-white/5 text-center">
+                        <i class="fa-solid fa-drone mb-2 text-blue-500"></i>
+                        <p class="text-[8px] font-bold uppercase tracking-widest">Drones</p>
+                    </div>
+                    <div class="p-4 rounded-xl bg-white/5 border border-white/5 text-center">
+                        <i class="fa-solid fa-magnifying-glass mb-2 text-green-500"></i>
+                        <p class="text-[8px] font-bold uppercase tracking-widest">Caching</p>
+                    </div>
+                    <div class="p-4 rounded-xl bg-white/5 border border-white/5 text-center">
+                        <i class="fa-solid fa-code mb-2 text-purple-500"></i>
+                        <p class="text-[8px] font-bold uppercase tracking-widest">Web</p>
+                    </div>
+                    <div class="p-4 rounded-xl bg-white/5 border border-white/5 text-center">
+                        <i class="fa-solid fa-bolt mb-2 text-orange-500"></i>
+                        <p class="text-[8px] font-bold uppercase tracking-widest">Fast UI</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer id="contact" class="py-16 px-6 text-center border-t border-white/5">
+        <h2 class="text-4xl font-black mb-6 tracking-tighter">Let's <span class="gradient-text">Build.</span></h2>
+        <a href="mailto:hey@lawsonmorris.co.uk" class="text-lg font-black text-blue-500 mb-8 block underline underline-offset-8">hey@lawsonmorris.co.uk</a>
+        
+        <div class="flex justify-center gap-6 mb-12">
+            <a href="https://www.tiktok.com/@lawson.morris4" class="text-xl text-gray-500 hover:text-white transition-colors"><i class="fa-brands fa-tiktok"></i></a>
+            <a href="https://www.instagram.com/lawso.morris9277" class="text-xl text-gray-500 hover:text-white transition-colors"><i class="fa-brands fa-instagram"></i></a>
+        </div>
+        
+        <p class="text-[8px] text-gray-600 font-black uppercase tracking-[0.4em]">&copy; 2026 Lawson Morris &bull; UK</p>
+    </footer>
+
+    <script>
+        function copyEmail() {
+            const email = "hey@lawsonmorris.co.uk";
+            const el = document.createElement('textarea');
+            el.value = email;
+            document.body.appendChild(el);
+            el.select();
+            document.execCommand('copy');
+            document.body.removeChild(el);
+
+            const toast = document.getElementById('toast');
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 3000);
+        }
+
+        window.onscroll = () => {
+            let winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            let height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            let scrolled = (winScroll / height) * 100;
+            document.getElementById("progress").style.width = scrolled + "%";
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) entry.target.classList.add('active');
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+        if (window.innerWidth > 1024) {
+            document.addEventListener('mousemove', (e) => {
+                const x = (e.clientX / window.innerWidth) - 0.5;
+                const y = (e.clientY / window.innerHeight) - 0.5;
+                document.getElementById('blob-1').style.transform = `translate(${x * 60}px, ${y * 60}px)`;
+                document.getElementById('blob-2').style.transform = `translate(${x * -60}px, ${y * -60}px)`;
+            });
+        }
+    </script>
+</body>
+</html>        }
         .animate-float { animation: float 3s ease-in-out infinite; }
 
         .gradient-text {
