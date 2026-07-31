@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FlightFeed.uk - Professional UK Satellite Drone Planner</title>
+    <title>FlightFeed.uk - Welsh 100 & South Wales Locations Satellite Planner</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <!-- Leaflet CSS & JS -->
@@ -18,13 +18,13 @@
     <header class="bg-slate-900/90 backdrop-blur border-b border-slate-800 px-4 py-3 flex items-center justify-between shrink-0 shadow-xl z-50">
         <div class="flex items-center space-x-3">
             <div class="bg-gradient-to-br from-sky-500 to-blue-600 p-2.5 rounded-xl text-white shadow-lg shadow-sky-600/30 flex items-center justify-center">
-                <i data-lucide="plane" class="w-5 h-5 transform -rotate-45"></i>
+                <i data-lucide="mountain" class="w-5 h-5"></i>
             </div>
             <div>
                 <h1 class="font-bold text-base md:text-lg tracking-tight flex items-center space-x-2">
-                    <span>FlightFeed</span><span class="text-[10px] bg-sky-500/20 text-sky-400 px-2 py-0.5 rounded-full border border-sky-500/35 font-semibold">UK Nationwide Pro</span>
+                    <span>FlightFeed</span><span class="text-[10px] bg-sky-500/20 text-sky-400 px-2 py-0.5 rounded-full border border-sky-500/35 font-semibold">South Wales & Welsh 100 Edition</span>
                 </h1>
-                <p class="text-[11px] text-slate-400 hidden sm:block">Castles, Fields, Mountains, Lakes & Sunset Ratings</p>
+                <p class="text-[11px] text-slate-400 hidden sm:block">Cardiff, Valleys, Coast, Brecon Beacons & Welsh Mountain Peaks</p>
             </div>
         </div>
 
@@ -32,15 +32,15 @@
         <nav class="hidden md:flex items-center space-x-1 bg-slate-950/80 p-1 rounded-xl border border-slate-800">
             <button onclick="switchTab('map')" id="nav-tab-map" class="nav-tab px-3.5 py-1.5 rounded-lg text-xs font-medium flex items-center space-x-2 bg-sky-600 text-white shadow-sm transition cursor-pointer">
                 <i data-lucide="globe" class="w-3.5 h-3.5"></i>
-                <span>Fullscreen Satellite Map</span>
+                <span>Satellite Map</span>
             </button>
             <button onclick="switchTab('spots')" id="nav-tab-spots" class="nav-tab px-3.5 py-1.5 rounded-lg text-xs font-medium flex items-center space-x-2 text-slate-400 hover:text-slate-200 hover:bg-slate-900 transition cursor-pointer">
                 <i data-lucide="compass" class="w-3.5 h-3.5"></i>
-                <span>UK Nationwide Directory</span>
+                <span>Locations Directory</span>
             </button>
             <button onclick="switchTab('regulations')" id="nav-tab-regulations" class="nav-tab px-3.5 py-1.5 rounded-lg text-xs font-medium flex items-center space-x-2 text-slate-400 hover:text-slate-200 hover:bg-slate-900 transition cursor-pointer">
                 <i data-lucide="shield-check" class="w-3.5 h-3.5"></i>
-                <span>CAA Rules & Laws</span>
+                <span>Mountain Drone Rules</span>
             </button>
             <button onclick="switchTab('checklist')" id="nav-tab-checklist" class="nav-tab px-3.5 py-1.5 rounded-lg text-xs font-medium flex items-center space-x-2 text-slate-400 hover:text-slate-200 hover:bg-slate-900 transition cursor-pointer">
                 <i data-lucide="check-square" class="w-3.5 h-3.5"></i>
@@ -51,10 +51,10 @@
         <div class="flex items-center space-x-2">
             <button onclick="locateUser()" class="bg-sky-600 hover:bg-sky-500 active:scale-95 text-xs font-semibold px-3.5 py-2 rounded-xl text-white shadow-md flex items-center space-x-1.5 transition cursor-pointer">
                 <i data-lucide="crosshair" class="w-4 h-4"></i>
-                <span>Center to My Location</span>
+                <span>My Location</span>
             </button>
             <!-- Mobile Menu Toggle -->
-            <button onclick="toggleMobileMenu()" class="md:hidden bg-slate-800 hover:bg-slate-700 p-2 rounded-xl border border-slate-700 text-slate-300">
+            <button onclick="toggleMobileMenu()" class="md:hidden bg-slate-800 hover:bg-slate-700 p-2 rounded-xl border border-slate-700 text-slate-300 cursor-pointer">
                 <i data-lucide="menu" class="w-5 h-5"></i>
             </button>
         </div>
@@ -62,16 +62,16 @@
 
     <!-- Mobile Navigation Drawer -->
     <div id="mobileMenu" class="md:hidden fixed inset-x-0 top-[57px] bg-slate-900/95 border-b border-slate-800 p-4 space-y-2 hidden z-40 shadow-2xl backdrop-blur">
-        <button onclick="switchTab('map'); toggleMobileMenu();" class="w-full text-left px-4 py-2.5 rounded-xl text-xs font-medium flex items-center space-x-2 bg-slate-800 text-white">
-            <i data-lucide="globe" class="w-4 h-4 text-sky-400"></i><span>Fullscreen Satellite Map</span>
+        <button onclick="switchTab('map'); toggleMobileMenu();" class="w-full text-left px-4 py-2.5 rounded-xl text-xs font-medium flex items-center space-x-2 bg-slate-800 text-white cursor-pointer">
+            <i data-lucide="globe" class="w-4 h-4 text-sky-400"></i><span>Satellite Map</span>
         </button>
-        <button onclick="switchTab('spots'); toggleMobileMenu();" class="w-full text-left px-4 py-2.5 rounded-xl text-xs font-medium flex items-center space-x-2 bg-slate-800 text-slate-300">
-            <i data-lucide="compass" class="w-4 h-4 text-sky-400"></i><span>UK Nationwide Directory</span>
+        <button onclick="switchTab('spots'); toggleMobileMenu();" class="w-full text-left px-4 py-2.5 rounded-xl text-xs font-medium flex items-center space-x-2 bg-slate-800 text-slate-300 cursor-pointer">
+            <i data-lucide="compass" class="w-4 h-4 text-sky-400"></i><span>Locations Directory</span>
         </button>
-        <button onclick="switchTab('regulations'); toggleMobileMenu();" class="w-full text-left px-4 py-2.5 rounded-xl text-xs font-medium flex items-center space-x-2 bg-slate-800 text-slate-300">
-            <i data-lucide="shield-check" class="w-4 h-4 text-sky-400"></i><span>CAA Rules & Laws</span>
+        <button onclick="switchTab('regulations'); toggleMobileMenu();" class="w-full text-left px-4 py-2.5 rounded-xl text-xs font-medium flex items-center space-x-2 bg-slate-800 text-slate-300 cursor-pointer">
+            <i data-lucide="shield-check" class="w-4 h-4 text-sky-400"></i><span>Mountain Drone Rules</span>
         </button>
-        <button onclick="switchTab('checklist'); toggleMobileMenu();" class="w-full text-left px-4 py-2.5 rounded-xl text-xs font-medium flex items-center space-x-2 bg-slate-800 text-slate-300">
+        <button onclick="switchTab('checklist'); toggleMobileMenu();" class="w-full text-left px-4 py-2.5 rounded-xl text-xs font-medium flex items-center space-x-2 bg-slate-800 text-slate-300 cursor-pointer">
             <i data-lucide="check-square" class="w-4 h-4 text-sky-400"></i><span>Pre-Flight Checklist</span>
         </button>
     </div>
@@ -88,7 +88,7 @@
                 <div class="flex items-center justify-between">
                     <div class="flex items-center space-x-2">
                         <i data-lucide="cloud-sun" class="w-4 h-4 text-sky-400"></i>
-                        <span id="overlayLocationTitle" class="font-semibold text-xs text-slate-200">Select a Castle, Field or Peak</span>
+                        <span id="overlayLocationTitle" class="font-semibold text-xs text-slate-200">Select a Welsh Spot or Peak</span>
                     </div>
                     <span id="permissionBadge" class="text-[10px] px-2 py-0.5 rounded-md font-bold bg-slate-800 text-slate-300 border border-slate-700">READY</span>
                 </div>
@@ -107,10 +107,10 @@
                     </div>
                 </div>
                 <p id="permissionDescription" class="text-[11px] text-slate-300 leading-relaxed">
-                    Click any satellite map marker across England, Wales, Scotland, or Northern Ireland to review flight permissions, landowner contacts, and sunset golden-hour scores.
+                    Click any location marker across Cardiff, the Valleys, Brecon Beacons, or Snowdonia to check regulations and landowner guidance.
                 </p>
                 <div id="contactBox" class="pt-2 border-t border-slate-800/80 hidden space-y-1.5">
-                    <div class="text-[11px] font-semibold text-slate-200">Permission Contacts:</div>
+                    <div class="text-[11px] font-semibold text-slate-200">Authority / Contact:</div>
                     <div class="flex flex-wrap gap-2 text-[11px]">
                         <a id="contactPhone" href="#" class="bg-slate-950 hover:bg-slate-800 border border-slate-800 text-sky-400 px-2.5 py-1 rounded-lg flex items-center space-x-1 transition">
                             <i data-lucide="phone" class="w-3 h-3"></i><span id="phoneText">Call</span>
@@ -129,12 +129,12 @@
                 <div>
                     <h2 class="text-xl font-bold text-white flex items-center space-x-2">
                         <i data-lucide="compass" class="w-6 h-6 text-sky-400"></i>
-                        <span>UK Nationwide Drone Directory (Castles, Fields & Mountains)</span>
+                        <span>South Wales & Welsh 100 Directory</span>
                     </h2>
-                    <p class="text-xs text-slate-400 mt-1">Hundreds of verified stunning locations across the UK with sunset ratings, phone numbers, and emails for landowner permission.</p>
+                    <p class="text-xs text-slate-400 mt-1">Extensive catalog covering Cardiff Bay, Valleys, Coastal Cliffs, Brecon Beacons, and Mountain Peaks.</p>
                 </div>
                 <div class="flex items-center space-x-2">
-                    <input type="text" id="directorySearch" oninput="renderDirectoryGrid()" placeholder="Search castles, fields, lakes..." class="bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-200 focus:outline-none focus:border-sky-500">
+                    <input type="text" id="directorySearch" oninput="renderDirectoryGrid()" placeholder="Search Cardiff Bay, Penarth, Pen y Fan..." class="bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-200 focus:outline-none focus:border-sky-500 w-64">
                 </div>
             </div>
 
@@ -148,31 +148,31 @@
             <div class="border-b border-slate-800 pb-4">
                 <h2 class="text-xl font-bold text-white flex items-center space-x-2">
                     <i data-lucide="shield-check" class="w-6 h-6 text-sky-400"></i>
-                    <span>UK CAA Drone Code & Airspace Laws</span>
+                    <span>Mountain & Coastal Drone Rules</span>
                 </h2>
-                <p class="text-xs text-slate-400 mt-1">Essential legal requirements for operating Unmanned Aircraft Systems (UAS) in UK airspace.</p>
+                <p class="text-xs text-slate-400 mt-1">Essential guidance for operating UAS in coastal zones, nature reserves, and National Parks.</p>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div class="bg-slate-900 border border-slate-800 p-5 rounded-2xl space-y-3 shadow-lg">
                     <div class="w-10 h-10 rounded-xl bg-sky-500/20 text-sky-400 flex items-center justify-center font-bold">1</div>
-                    <h3 class="font-semibold text-sm text-white">Visual Line of Sight (VLOS)</h3>
-                    <p class="text-xs text-slate-300 leading-relaxed">You must keep your drone in direct sight at all times without binoculars or goggles so you can see and avoid obstacles and other aircraft.</p>
+                    <h3 class="font-semibold text-sm text-white">Terrain Following (120m Rule)</h3>
+                    <p class="text-xs text-slate-300 leading-relaxed">When flying over steep mountain ridges or coastal cliffs, ensure your drone remains no more than 120 metres from the nearest ground point.</p>
                 </div>
                 <div class="bg-slate-900 border border-slate-800 p-5 rounded-2xl space-y-3 shadow-lg">
                     <div class="w-10 h-10 rounded-xl bg-sky-500/20 text-sky-400 flex items-center justify-center font-bold">2</div>
-                    <h3 class="font-semibold text-sm text-white">Maximum Altitude (400ft / 120m)</h3>
-                    <p class="text-xs text-slate-300 leading-relaxed">Never fly higher than 400 feet (120 metres) above the surface. On steep slopes or hills, maintain no more than 120m from the nearest point of the terrain.</p>
+                    <h3 class="font-semibold text-sm text-white">Harbour & Authority Checks</h3>
+                    <p class="text-xs text-slate-300 leading-relaxed">Check Cardiff Harbour Authority and local council bylaws before flying near barrages, piers, and populated public promenades.</p>
                 </div>
                 <div class="bg-slate-900 border border-slate-800 p-5 rounded-2xl space-y-3 shadow-lg">
                     <div class="w-10 h-10 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center font-bold">3</div>
-                    <h3 class="font-semibold text-sm text-white">Flight Restriction Zones (FRZs)</h3>
-                    <p class="text-xs text-slate-300 leading-relaxed">Strictly avoid restricted airspace around licensed airports and aerodromes unless you have coordinated digitally with air traffic control.</p>
+                    <h3 class="font-semibold text-sm text-white">Wildlife & SSSI Reserves</h3>
+                    <p class="text-xs text-slate-300 leading-relaxed">Respect nesting seabirds on cliffs (Nash Point, Sully Island) and waterfowl at nature reserves (Kenfig, Cosmeston).</p>
                 </div>
                 <div class="bg-slate-900 border border-slate-800 p-5 rounded-2xl space-y-3 shadow-lg">
                     <div class="w-10 h-10 rounded-xl bg-rose-500/20 text-rose-400 flex items-center justify-center font-bold">4</div>
-                    <h3 class="font-semibold text-sm text-white">Landowner Permission</h3>
-                    <p class="text-xs text-slate-300 leading-relaxed">While CAA regulates airspace, you must obtain permission from the landowner (e.g., National Trust, Historic Scotland, Cadw, Forestry England) to take off and land.</p>
+                    <h3 class="font-semibold text-sm text-white">Historic Monuments</h3>
+                    <p class="text-xs text-slate-300 leading-relaxed">Filming historic abbeys (Tintern, Neath) or castles (Caerphilly, Castell Coch) often requires landowner consent from Cadw.</p>
                 </div>
             </div>
         </div>
@@ -182,31 +182,31 @@
             <div class="border-b border-slate-800 pb-4">
                 <h2 class="text-xl font-bold text-white flex items-center space-x-2">
                     <i data-lucide="check-square" class="w-6 h-6 text-sky-400"></i>
-                    <span>Pilot Pre-Flight Safety Checklist</span>
+                    <span>Pilot Pre-Flight Checklist</span>
                 </h2>
-                <p class="text-xs text-slate-400 mt-1">Complete this mandatory verification sequence prior to every battery launch.</p>
+                <p class="text-xs text-slate-400 mt-1">Complete this verification sequence before launching your drone.</p>
             </div>
 
             <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl space-y-4">
                 <div class="space-y-3" id="checkListContainer">
                     <label class="flex items-start space-x-3 p-3 bg-slate-950 rounded-xl border border-slate-800 cursor-pointer hover:border-sky-500/50 transition">
                         <input type="checkbox" class="mt-0.5 rounded border-slate-700 text-sky-600 focus:ring-sky-500 w-4 h-4">
-                        <span class="text-xs text-slate-200 leading-relaxed"><strong>Weather & Wind Check:</strong> Verified wind speeds are within drone operational limits (typically &lt; 15-20 mph) with clear visibility.</span>
+                        <span class="text-xs text-slate-200 leading-relaxed"><strong>Wind & Weather Check:</strong> Confirmed wind speeds are safe for coastal/mountain conditions.</span>
                     </label>
                     <label class="flex items-start space-x-3 p-3 bg-slate-950 rounded-xl border border-slate-800 cursor-pointer hover:border-sky-500/50 transition">
                         <input type="checkbox" class="mt-0.5 rounded border-slate-700 text-sky-600 focus:ring-sky-500 w-4 h-4">
-                        <span class="text-xs text-slate-200 rounded-relaxed leading-relaxed"><strong>Airspace & NOTAMs:</strong> Confirmed no temporary flight restrictions, military exercises, or airport FRZs affect the immediate operating zone.</span>
+                        <span class="text-xs text-slate-200 leading-relaxed"><strong>Visual Line of Sight (VLOS):</strong> Maintained clear line of sight and clear of bystanders.</span>
                     </label>
                     <label class="flex items-start space-x-3 p-3 bg-slate-950 rounded-xl border border-slate-800 cursor-pointer hover:border-sky-500/50 transition">
                         <input type="checkbox" class="mt-0.5 rounded border-slate-700 text-sky-600 focus:ring-sky-500 w-4 h-4">
-                        <span class="text-xs text-slate-200 leading-relaxed"><strong>Aircraft Hardware:</strong> Inspected propeller blades for cracks, checked battery health (&gt;90%), and calibrated compass/IMU.</span>
+                        <span class="text-xs text-slate-200 leading-relaxed"><strong>Battery & Firmware:</strong> Verified fully charged batteries and updated GPS lock.</span>
                     </label>
                     <label class="flex items-start space-x-3 p-3 bg-slate-950 rounded-xl border border-slate-800 cursor-pointer hover:border-sky-500/50 transition">
                         <input type="checkbox" class="mt-0.5 rounded border-slate-700 text-sky-600 focus:ring-sky-500 w-4 h-4">
-                        <span class="text-xs text-slate-200 leading-relaxed"><strong>Launch Site Safety:</strong> Ensured minimum 50m separation from uninvolved members of the public, roads, and structures.</span>
+                        <span class="text-xs text-slate-200 leading-relaxed"><strong>Local Landowner / Authority:</strong> Checked council or harbor rules for the specific launch site.</span>
                     </label>
                 </div>
-                <button onclick="alert('Checklist completed successfully! Safe flight.')" class="w-full bg-sky-600 hover:bg-sky-500 text-white font-semibold py-2.5 rounded-xl text-xs transition cursor-pointer shadow-lg shadow-sky-600/20">Confirm Readiness & Save Log</button>
+                <button onclick="alert('Pre-flight checklist completed successfully! Safe flight.')" class="w-full bg-sky-600 hover:bg-sky-500 text-white font-semibold py-2.5 rounded-xl text-xs transition cursor-pointer shadow-lg shadow-sky-600/20">Confirm Readiness & Save Log</button>
             </div>
         </div>
 
@@ -217,284 +217,873 @@
         // Initialize Lucide Icons
         lucide.createIcons();
 
-        // Comprehensive Nationwide UK Database (Castles, Fields, Mountains, Lakes, Reservoirs, Coastlines)
+        // Comprehensive South Wales & Welsh 100 Database
         const scenicSpots = [
-            // WALES
+            // CARDIFF & RUMNEY
             {
                 id: 1,
-                name: "Snowdon (Yr Wyddfa) Summit & Ridge",
-                category: "Mountain",
+                name: "Cardiff Bay Barrage",
+                category: "Water & Skyline",
+                lat: 51.4485,
+                lng: -3.1685,
+                permission: "Check Cardiff Harbour Authority rules",
+                statusClass: "bg-amber-500/20 text-amber-400 border-amber-500/30",
+                wind: "11 mph W",
+                visibility: "15 km",
+                sunset: "⭐ 9.5/10 (Bay Water Reflections)",
+                desc: "Stunning views of water, Cardiff city skyline, and the outer Bristol Channel.",
+                phone: "+44 29 2087 3220",
+                email: "harbour@cardiff.gov.uk"
+            },
+            {
+                id: 2,
+                name: "Lamby Lake & Foreshore, Rumney",
+                category: "Local Spot",
+                lat: 51.5125,
+                lng: -3.1245,
+                permission: "Permitted (Cardiff Council Parks)",
+                statusClass: "bg-emerald-500/20 text-emerald-400 border-emerald-500/30",
+                wind: "9 mph SW",
+                visibility: "14 km",
+                sunset: "⭐ 9.6/10 (Estuary Golden Hour)",
+                desc: "Local scenic lake and coastal foreshore area in Rumney, Cardiff. Ideal for practice flights.",
+                phone: "+44 29 2087 2087",
+                email: "parks@cardiff.gov.uk"
+            },
+            {
+                id: 3,
+                name: "New Road Recreation Ground, Rumney",
+                category: "Local Spot",
+                lat: 51.5182,
+                lng: -3.1385,
+                permission: "Permitted (Check Council Byelaws)",
+                statusClass: "bg-emerald-500/20 text-emerald-400 border-emerald-500/30",
+                wind: "8 mph W",
+                visibility: "15 km",
+                sunset: "⭐ 9.2/10 (Open Field Dusk)",
+                desc: "Local recreation ground offering open grass pitches for community recreational flights.",
+                phone: "+44 29 2087 2087",
+                email: "parks@cardiff.gov.uk"
+            },
+            {
+                id: 4,
+                name: "Pontcanna Fields",
+                category: "River & Park",
+                lat: 51.4885,
+                lng: -3.2045,
+                permission: "Check council rules",
+                statusClass: "bg-emerald-500/20 text-emerald-400 border-emerald-500/30",
+                wind: "8 mph W",
+                visibility: "15 km",
+                sunset: "⭐ 9.1/10 (River Tree Canopy)",
+                desc: "Expansive green parkland alongside the River Taff close to central Cardiff.",
+                phone: "+44 29 2087 2087",
+                email: "parks@cardiff.gov.uk"
+            },
+            {
+                id: 5,
+                name: "Bute Park Edges",
+                category: "City River",
+                lat: 51.4852,
+                lng: -3.1852,
+                permission: "Busy Area — Avoid People",
+                statusClass: "bg-rose-500/20 text-rose-400 border-rose-500/30",
+                wind: "8 mph W",
+                visibility: "15 km",
+                sunset: "⭐ 9.3/10 (Castle Silhouette)",
+                desc: "Historic parkland adjacent to Cardiff Castle. High pedestrian traffic requires caution.",
+                phone: "+44 29 2087 2087",
+                email: "parks@cardiff.gov.uk"
+            },
+            {
+                id: 6,
+                name: "Taff Trail Sections",
+                category: "River Valleys",
+                lat: 51.5025,
+                lng: -3.2245,
+                permission: "Check local land rules",
+                statusClass: "bg-emerald-500/20 text-emerald-400 border-emerald-500/30",
+                wind: "9 mph NW",
+                visibility: "16 km",
+                sunset: "⭐ 9.0/10 (Tree-lined River)",
+                desc: "Scenic riverside path linking Cardiff north towards the Valleys.",
+                phone: "+44 29 2087 2087",
+                email: "parks@cardiff.gov.uk"
+            },
+            {
+                id: 7,
+                name: "Forest Farm",
+                category: "Wetlands",
+                lat: 51.5285,
+                lng: -3.2452,
+                permission: "Check Cardiff Council land rules",
+                statusClass: "bg-emerald-500/20 text-emerald-400 border-emerald-500/30",
+                wind: "8 mph W",
+                visibility: "15 km",
+                sunset: "⭐ 9.4/10 (Nature Reserve Dusk)",
+                desc: "Nature reserve and Glamorganshire Canal wildlife corridor.",
+                phone: "+44 29 2087 2087",
+                email: "parks@cardiff.gov.uk"
+            },
+            {
+                id: 8,
+                name: "Cefn Onn Park",
+                category: "Woodland",
+                lat: 51.5752,
+                lng: -3.1785,
+                permission: "Cardiff Council",
+                statusClass: "bg-emerald-500/20 text-emerald-400 border-emerald-500/30",
+                wind: "9 mph NW",
+                visibility: "16 km",
+                sunset: "⭐ 9.2/10 (Valley Woodland)",
+                desc: "Historic parkland featuring native and exotic trees nestled in the northern foothills of Cardiff.",
+                phone: "+44 29 2087 2087",
+                email: "parks@cardiff.gov.uk"
+            },
+            {
+                id: 9,
+                name: "Roath Park Lake",
+                category: "Lake",
+                lat: 51.5025,
+                lng: -3.1725,
+                permission: "Busy — Permission Recommended",
+                statusClass: "bg-amber-500/20 text-amber-400 border-amber-500/30",
+                wind: "7 mph W",
+                visibility: "15 km",
+                sunset: "⭐ 9.5/10 (Scott Lighthouse Glow)",
+                desc: "Victorian park featuring the iconic Scott Memorial Lighthouse and abundant waterfowl.",
+                phone: "+44 29 2087 2087",
+                email: "parks@cardiff.gov.uk"
+            },
+            {
+                id: 10,
+                name: "Heath Park",
+                category: "Open Space",
+                lat: 51.5052,
+                lng: -3.1925,
+                permission: "Cardiff Council",
+                statusClass: "bg-emerald-500/20 text-emerald-400 border-emerald-500/30",
+                wind: "8 mph W",
+                visibility: "15 km",
+                sunset: "⭐ 8.9/10 (Community Park)",
+                desc: "Large urban park with open recreational fields and model railway.",
+                phone: "+44 29 2087 2087",
+                email: "parks@cardiff.gov.uk"
+            },
+            {
+                id: 11,
+                name: "St Fagans Fields",
+                category: "Countryside & History",
+                lat: 51.4925,
+                lng: -3.2752,
+                permission: "Museum site permission likely needed",
+                statusClass: "bg-amber-500/20 text-amber-400 border-amber-500/30",
+                wind: "10 mph W",
+                visibility: "16 km",
+                sunset: "⭐ 9.6/10 (Historic Countryside)",
+                desc: "Rolling countryside surrounding the National Museum of History.",
+                phone: "+44 300 111 2333",
+                email: "museum@museumwales.ac.uk"
+            },
+
+            // VALE OF GLAMORGAN & COAST
+            {
+                id: 12,
+                name: "Penarth Pier",
+                category: "Coast & Pier",
+                lat: 51.4352,
+                lng: -3.1725,
+                permission: "Check council restrictions + avoid crowds",
+                statusClass: "bg-amber-500/20 text-amber-400 border-amber-500/30",
+                wind: "12 mph SE",
+                visibility: "18 km",
+                sunset: "⭐ 9.8/10 (Severn Estuary Sunset)",
+                desc: "Victorian pier and cliff tops overlooking the Bristol Channel.",
+                phone: "+44 1446 700111",
+                email: "enquiries@valeofglamorgan.gov.uk"
+            },
+            {
+                id: 13,
+                name: "Cosmeston Lakes",
+                category: "Lakes & Wildlife",
+                lat: 51.4285,
+                lng: -3.1952,
+                permission: "Contact Vale of Glamorgan Council",
+                statusClass: "bg-emerald-500/20 text-emerald-400 border-emerald-500/30",
+                wind: "10 mph S",
+                visibility: "16 km",
+                sunset: "⭐ 9.5/10 (Lakeside Reflection)",
+                desc: "Country park and medieval village site with rich birdlife and boardwalks.",
+                phone: "+44 1446 700111",
+                email: "enquiries@valeofglamorgan.gov.uk"
+            },
+            {
+                id: 14,
+                name: "Barry Island",
+                category: "Coast",
+                lat: 51.3985,
+                lng: -3.2725,
+                permission: "Avoid Crowds",
+                statusClass: "bg-amber-500/20 text-amber-400 border-amber-500/30",
+                wind: "13 mph SW",
+                visibility: "18 km",
+                sunset: "⭐ 9.7/10 (Whitmore Bay Ocean Sunset)",
+                desc: "Famous coastal resort beach and golden sands at Whitmore Bay.",
+                phone: "+44 1446 700111",
+                email: "enquiries@valeofglamorgan.gov.uk"
+            },
+            {
+                id: 15,
+                name: "Jackson’s Bay",
+                category: "Cliffs & Coast",
+                lat: 51.3925,
+                lng: -3.2615,
+                permission: "Check Vale Council",
+                statusClass: "bg-emerald-500/20 text-emerald-400 border-emerald-500/30",
+                wind: "13 mph SW",
+                visibility: "18 km",
+                sunset: "⭐ 9.6/10 (Secluded Bay Glow)",
+                desc: "Sheltered sandy cove tucked away near Barry harbour.",
+                phone: "+44 1446 700111",
+                email: "enquiries@valeofglamorgan.gov.uk"
+            },
+            {
+                id: 16,
+                name: "Sully Island Viewpoint",
+                category: "Coast & Wildlife",
+                lat: 51.4125,
+                lng: -3.2285,
+                permission: "Tide + Wildlife Rules",
+                statusClass: "bg-amber-500/20 text-amber-400 border-amber-500/30",
+                wind: "12 mph S",
+                visibility: "17 km",
+                sunset: "⭐ 9.7/10 (Channel Horizon)",
+                desc: "Tidal island viewpoint with rugged coastal rock formations.",
+                phone: "+44 1446 700111",
+                email: "enquiries@valeofglamorgan.gov.uk"
+            },
+            {
+                id: 17,
+                name: "Nash Point",
+                category: "Cliffs & Coast",
+                lat: 51.4085,
+                lng: -3.5652,
+                permission: "Great Cinematic Shots",
+                statusClass: "bg-emerald-500/20 text-emerald-400 border-emerald-500/30",
+                wind: "15 mph W",
+                visibility: "22 km",
+                sunset: "⭐ 9.9/10 (Dramatic Lias Cliffs Sunset)",
+                desc: "Stunning dramatic limestone cliffs and lighthouse on the Glamorgan Heritage Coast.",
+                phone: "+44 1446 700111",
+                email: "enquiries@valeofglamorgan.gov.uk"
+            },
+            {
+                id: 18,
+                name: "Ogmore Beach",
+                category: "River & Coast",
+                lat: 51.4585,
+                lng: -3.6152,
+                permission: "Check Restrictions",
+                statusClass: "bg-emerald-500/20 text-emerald-400 border-emerald-500/30",
+                wind: "14 mph W",
+                visibility: "20 km",
+                sunset: "⭐ 9.8/10 (Rivermouth Golden Hour)",
+                desc: "Where the River Ewenny and Ogmore River meet the sea, featuring stepping stones and castle ruins.",
+                phone: "+44 1656 651555",
+                email: "welcome@bridgend.gov.uk"
+            },
+            {
+                id: 19,
+                name: "Southerndown Beach (Durdle Bay)",
+                category: "Cliffs",
+                lat: 51.4425,
+                lng: -3.6185,
+                permission: "Good Sunset Spot",
+                statusClass: "bg-emerald-500/20 text-emerald-400 border-emerald-500/30",
+                wind: "14 mph W",
+                visibility: "20 km",
+                sunset: "⭐ 9.9/10 (Cliff Edge Sunset)",
+                desc: "Expansive beach backed by spectacular layered cliffs on the Heritage Coast.",
+                phone: "+44 1656 651555",
+                email: "welcome@bridgend.gov.uk"
+            },
+            {
+                id: 20,
+                name: "Dunraven Bay",
+                category: "Cliffs",
+                lat: 51.4452,
+                lng: -3.6125,
+                permission: "Busy in Summer",
+                statusClass: "bg-amber-500/20 text-amber-400 border-amber-500/30",
+                wind: "14 mph W",
+                visibility: "20 km",
+                sunset: "⭐ 9.8/10 (Walled Garden & Coast)",
+                desc: "Sheltered bay with fossil-rich rocks and walled gardens overlooking the sea.",
+                phone: "+44 1656 651555",
+                email: "welcome@bridgend.gov.uk"
+            },
+
+            // VALLEYS & MOUNTAINS (CAERPHILLY, RHONDDA, GWENT)
+            {
+                id: 21,
+                name: "Caerphilly Mountain",
+                category: "Mountain & Castle Views",
+                lat: 51.5785,
+                lng: -3.2385,
+                permission: "Check Landowner + Airspace",
+                statusClass: "bg-emerald-500/20 text-emerald-400 border-emerald-500/30",
+                wind: "12 mph W",
+                visibility: "18 km",
+                sunset: "⭐ 9.7/10 (Caerphilly Basin Horizon)",
+                desc: "Prominent ridge offering panoramic views over the South Wales valleys and Caerphilly Castle.",
+                phone: "+44 1443 866000",
+                email: "info@caerphilly.gov.uk"
+            },
+            {
+                id: 22,
+                name: "Castell Coch Area",
+                category: "Forest & Castle",
+                lat: 51.5352,
+                lng: -3.2552,
+                permission: "Contact Cadw if Filming Castle Areas",
+                statusClass: "bg-amber-500/20 text-amber-400 border-amber-500/30",
+                wind: "10 mph W",
+                visibility: "16 km",
+                sunset: "⭐ 9.6/10 (Fairy Tale Castle Canopy)",
+                desc: "Fairy-tale gothic revival castle nestled in beech woods above Taff's Well.",
+                phone: "+44 1443 821621",
+                email: "cadw@gov.wales"
+            },
+            {
+                id: 23,
+                name: "Garth Mountain",
+                category: "Big Cardiff Views",
+                lat: 51.5425,
+                lng: -3.2952,
+                permission: "Great Sunrise/Sunset Location",
+                statusClass: "bg-emerald-500/20 text-emerald-400 border-emerald-500/30",
+                wind: "14 mph W",
+                visibility: "20 km",
+                sunset: "⭐ 9.9/10 (Panoramic Summit Glow)",
+                desc: "Famous hill overlooking the Taff Gorge ('The Englishman Who Went Up a Hill But Came Down a Mountain').",
+                phone: "+44 1443 866000",
+                email: "info@caerphilly.gov.uk"
+            },
+            {
+                id: 24,
+                name: "Pentyrch Reservoir",
+                category: "Reservoir & Hills",
+                lat: 51.5385,
+                lng: -3.2825,
+                permission: "Check Landowner",
+                statusClass: "bg-amber-500/20 text-amber-400 border-amber-500/30",
+                wind: "11 mph W",
+                visibility: "17 km",
+                sunset: "⭐ 9.3/10 (Hills & Water)",
+                desc: "Quiet upland reservoir nestled in the hills northwest of Cardiff.",
+                phone: "+44 1443 866000",
+                email: "info@caerphilly.gov.uk"
+            },
+            {
+                id: 25,
+                name: "Llantrisant Common",
+                category: "Open Fields",
+                lat: 51.5352,
+                lng: -3.3852,
+                permission: "Check Local Restrictions",
+                statusClass: "bg-emerald-500/20 text-emerald-400 border-emerald-500/30",
+                wind: "11 mph W",
+                visibility: "18 km",
+                sunset: "⭐ 9.4/10 (Common Grazing Land)",
+                desc: "Expansive open common land with historic town roots and valley views.",
+                phone: "+44 1443 424000",
+                email: "enquiries@rctcbc.gov.uk"
+            },
+            {
+                id: 26,
+                name: "Ruperra Castle Area",
+                category: "Woodland",
+                lat: 51.5725,
+                lng: -3.1585,
+                permission: "Private Land Nearby",
+                statusClass: "bg-amber-500/20 text-amber-400 border-amber-500/30",
+                wind: "10 mph W",
+                visibility: "16 km",
+                sunset: "⭐ 9.3/10 (Ancient Woodland)",
+                desc: "Historic ruined 17th-century country house surrounded by mature Welsh woods.",
+                phone: "+44 1443 866000",
+                email: "info@caerphilly.gov.uk"
+            },
+            {
+                id: 27,
+                name: "Wentwood Forest",
+                category: "Huge Woodland",
+                lat: 51.6352,
+                lng: -2.8352,
+                permission: "Check Natural Resources Wales Rules",
+                statusClass: "bg-emerald-500/20 text-emerald-400 border-emerald-500/30",
+                wind: "11 mph W",
+                visibility: "18 km",
+                sunset: "⭐ 9.5/10 (Ancient Forest Canopy)",
+                desc: "One of the largest ancient forests in Wales located in Monmouthshire.",
+                phone: "+44 300 065 3000",
+                email: "enquiries@naturalresourceswales.gov.uk"
+            },
+            {
+                id: 28,
+                name: "Cwmcarn Forest",
+                category: "Mountains & Drive",
+                lat: 51.6425,
+                lng: -3.1452,
+                permission: "Contact Natural Resources Wales",
+                statusClass: "bg-emerald-500/20 text-emerald-400 border-emerald-500/30",
+                wind: "13 mph NW",
+                visibility: "18 km",
+                sunset: "⭐ 9.7/10 (Ebbw Valley Mountain Sunset)",
+                desc: "Scenic valley forest drive, mountain biking trails, and sweeping peak views.",
+                phone: "+44 300 065 3000",
+                email: "enquiries@naturalresourceswales.gov.uk"
+            },
+            {
+                id: 29,
+                name: "Sirhowy Valley",
+                category: "Valleys",
+                lat: 51.6985,
+                lng: -3.2185,
+                permission: "Check Landowner",
+                statusClass: "bg-emerald-500/20 text-emerald-400 border-emerald-500/30",
+                wind: "12 mph NW",
+                visibility: "17 km",
+                sunset: "⭐ 9.2/10 (Valley Ridge Glow)",
+                desc: "Picturesque South Wales valley country park and reclaimed industrial heritage.",
+                phone: "+44 1443 866000",
+                email: "info@caerphilly.gov.uk"
+            },
+            {
+                id: 30,
+                name: "Dare Valley Country Park",
+                category: "Lakes & Mountains",
+                lat: 51.6952,
+                lng: -3.4752,
+                permission: "Contact Park Management",
+                statusClass: "bg-emerald-500/20 text-emerald-400 border-emerald-500/30",
+                wind: "13 mph W",
+                visibility: "18 km",
+                sunset: "⭐ 9.6/10 (Mountain Lake Dusk)",
+                desc: "Scenic country park featuring lakes, streams, and surrounding mountain ridges near Aberdare.",
+                phone: "+44 1443 424000",
+                email: "enquiries@rctcbc.gov.uk"
+            },
+            {
+                id: 31,
+                name: "Bryn Meadows Area",
+                category: "Valley Views",
+                lat: 51.6625,
+                lng: -3.2285,
+                permission: "Private Land Nearby",
+                statusClass: "bg-amber-500/20 text-amber-400 border-amber-500/30",
+                wind: "11 mph W",
+                visibility: "17 km",
+                sunset: "⭐ 9.4/10 (Rolling Valleys)",
+                desc: "Elevated parkland and golf resort offering sweeping views across the Rhymney Valley.",
+                phone: "+44 1443 866000",
+                email: "info@caerphilly.gov.uk"
+            },
+
+            // BRIDGEND, PORT TALBOT & NEATH
+            {
+                id: 32,
+                name: "Kenfig Nature Reserve",
+                category: "Dunes & Lake",
+                lat: 51.5285,
+                lng: -3.7252,
+                permission: "Wildlife Restrictions",
+                statusClass: "bg-amber-500/20 text-amber-400 border-amber-500/30",
+                wind: "13 mph W",
+                visibility: "19 km",
+                sunset: "⭐ 9.5/10 (National Nature Reserve)",
+                desc: "National nature reserve featuring a large freshwater lake and expansive sand dune system.",
+                phone: "+44 1656 743397",
+                email: "kenfig@biodiversitywales.org.uk"
+            },
+            {
+                id: 33,
+                name: "Merthyr Mawr Sand Dunes",
+                category: "Sand Dunes",
+                lat: 51.4825,
+                lng: -3.6185,
+                permission: "Check NRW",
+                statusClass: "bg-emerald-500/20 text-emerald-400 border-emerald-500/30",
+                wind: "14 mph W",
+                visibility: "20 km",
+                sunset: "⭐ 9.8/10 (Giant Dune Ridges)",
+                desc: "Home to some of the highest sand dunes in Europe, offering epic desert-like textures.",
+                phone: "+44 300 065 3000",
+                email: "enquiries@naturalresourceswales.gov.uk"
+            },
+            {
+                id: 34,
+                name: "Parc Slip Nature Reserve",
+                category: "Wildlife",
+                lat: 51.5352,
+                lng: -3.5852,
+                permission: "Contact Reserve",
+                statusClass: "bg-amber-500/20 text-amber-400 border-amber-500/30",
+                wind: "11 mph W",
+                visibility: "17 km",
+                sunset: "⭐ 9.3/10 (Wetland Wildlife)",
+                desc: "Wildlife trust nature reserve with wetlands, meadows, and bird hides.",
+                phone: "+44 1656 724100",
+                email: "info@welshwildlife.org"
+            },
+            {
+                id: 35,
+                name: "Bryngarw Country Park",
+                category: "Woodland",
+                lat: 51.5452,
+                lng: -3.5652,
+                permission: "Council Permission",
+                statusClass: "bg-emerald-500/20 text-emerald-400 border-emerald-500/30",
+                wind: "10 mph W",
+                visibility: "17 km",
+                sunset: "⭐ 9.4/10 (River & Woodland)",
+                desc: "113-acre country park with mature trees, river, and ornamental gardens.",
+                phone: "+44 1656 651555",
+                email: "welcome@bridgend.gov.uk"
+            },
+            {
+                id: 36,
+                name: "Margam Country Park",
+                category: "Mountains & Castle",
+                lat: 51.5725,
+                lng: -3.7385,
+                permission: "Contact Park",
+                statusClass: "bg-emerald-500/20 text-amber-400 border-amber-500/30",
+                wind: "13 mph W",
+                visibility: "19 km",
+                sunset: "⭐ 9.8/10 (Tudor Gothic Castle)",
+                desc: "1,000-acre park featuring a magnificent Tudor Gothic orangery and castle set against mountain slopes.",
+                phone: "+44 1639 881635",
+                email: "margampark@npt.gov.uk"
+            },
+            {
+                id: 37,
+                name: "Afan Forest Park",
+                category: "Mountain Trails",
+                lat: 51.6352,
+                lng: -3.7252,
+                permission: "Contact NRW",
+                statusClass: "bg-emerald-500/20 text-emerald-400 border-emerald-500/30",
+                wind: "14 mph NW",
+                visibility: "18 km",
+                sunset: "⭐ 9.7/10 (Forest Valley Beacons)",
+                desc: "World-class mountain biking and forested valleys in the Afan valley.",
+                phone: "+44 300 065 3000",
+                email: "enquiries@naturalresourceswales.gov.uk"
+            },
+            {
+                id: 38,
+                name: "Neath Abbey",
+                category: "Ruins",
+                lat: 51.6685,
+                lng: -3.8152,
+                permission: "Cadw Permission",
+                statusClass: "bg-amber-500/20 text-amber-400 border-amber-500/30",
+                wind: "11 mph W",
+                visibility: "17 km",
+                sunset: "⭐ 9.6/10 (Historic Abbey Ruins)",
+                desc: "Stunning medieval monastic ruins of Wales's largest abbey.",
+                phone: "+44 1443 821621",
+                email: "cadw@gov.wales"
+            },
+
+            // BRECON BEACONS (BANNAU BRYCHEINIOG) & BLACK MOUNTAINS
+            {
+                id: 39,
+                name: "Pen y Fan, Bannau Brycheiniog",
+                category: "Iconic Mountain (#35)",
+                lat: 51.8890,
+                lng: -3.4395,
+                permission: "Permitted (National Trust / Brecon Beacons)",
+                statusClass: "bg-emerald-500/20 text-emerald-400 border-emerald-500/30",
+                wind: "16 mph SW",
+                visibility: "24 km",
+                sunset: "⭐ 9.9/10 (South Wales Roof Sunset)",
+                desc: "Highest peak in South Wales (886m). Red sandstone plateau with classic rolling valley views.",
+                phone: "+44 1874 623366",
+                email: "enquiries@beacons-npa.gov.uk"
+            },
+            {
+                id: 40,
+                name: "Craig-y-Nos Area",
+                category: "Mountains",
+                lat: 51.8025,
+                lng: -3.6925,
+                permission: "Check Private Land",
+                statusClass: "bg-emerald-500/20 text-emerald-400 border-emerald-500/30",
+                wind: "14 mph SW",
+                visibility: "19 km",
+                sunset: "⭐ 9.6/10 (Swansea Valley Beacons)",
+                desc: "Upper Swansea valley parkland and country estate beneath limestone crags.",
+                phone: "+44 1874 623366",
+                email: "enquiries@beacons-npa.gov.uk"
+            },
+            {
+                id: 41,
+                name: "Llyn y Fan Fach",
+                category: "Mountain Lake",
+                lat: 51.8792,
+                lng: -3.7645,
+                permission: "Permitted (Black Mountain Range)",
+                statusClass: "bg-emerald-500/20 text-emerald-400 border-emerald-500/30",
+                wind: "15 mph W",
+                visibility: "22 km",
+                sunset: "⭐ 9.9/10 (Glacial Tarn Golden Hour)",
+                desc: "Stunning cliff-lined glacial lake (749m) in the wild western Beacons.",
+                phone: "+44 1874 623366",
+                email: "enquiries@beacons-npa.gov.uk"
+            },
+            {
+                id: 42,
+                name: "Llangorse Lake",
+                category: "Lake & Mountains",
+                lat: 51.9552,
+                lng: -3.2752,
+                permission: "Contact Lake Owner",
+                statusClass: "bg-amber-500/20 text-amber-400 border-amber-500/30",
+                wind: "12 mph SW",
+                visibility: "19 km",
+                sunset: "⭐ 9.7/10 (Lakeside Beacons Reflection)",
+                desc: "Largest natural lake in South Wales set against the dramatic backdrop of the Brecon Beacons.",
+                phone: "+44 1874 658226",
+                email: "info@llangorselake.co.uk"
+            },
+            {
+                id: 43,
+                name: "Talybont Reservoir",
+                category: "Reservoir",
+                lat: 51.8652,
+                lng: -3.3752,
+                permission: "Great Drone Location",
+                statusClass: "bg-emerald-500/20 text-emerald-400 border-emerald-500/30",
+                wind: "13 mph SW",
+                visibility: "20 km",
+                sunset: "⭐ 9.8/10 (Water & Forest Beacons)",
+                desc: "Expansive upland reservoir in the heart of the Brecon Beacons national park.",
+                phone: "+44 1874 623366",
+                email: "enquiries@beacons-npa.gov.uk"
+            },
+            {
+                id: 44,
+                name: "Usk Reservoir",
+                category: "Remote Lake",
+                lat: 51.9252,
+                lng: -3.6752,
+                permission: "Check NRW",
+                statusClass: "bg-emerald-500/20 text-emerald-400 border-emerald-500/30",
+                wind: "13 mph W",
+                visibility: "20 km",
+                sunset: "⭐ 9.6/10 (Forest Wilderness)",
+                desc: "Peaceful remote reservoir surrounded by dense forestry in the western Beacons.",
+                phone: "+44 300 065 3000",
+                email: "enquiries@naturalresourceswales.gov.uk"
+            },
+            {
+                id: 45,
+                name: "Sugar Loaf Mountain",
+                category: "Views",
+                lat: 51.8552,
+                lng: -3.0352,
+                permission: "Check National Park Rules",
+                statusClass: "bg-emerald-500/20 text-emerald-400 border-emerald-500/30",
+                wind: "14 mph W",
+                visibility: "22 km",
+                sunset: "⭐ 9.9/10 (Abergavenny Basin Horizon)",
+                desc: "Distinctive peak (596m) near Abergavenny with breathtaking panoramic summit views.",
+                phone: "+44 1874 623366",
+                email: "enquiries@beacons-npa.gov.uk"
+            },
+            {
+                id: 46,
+                name: "Skirrid Mountain (Ysgyryd Fawr)",
+                category: "Views",
+                lat: 51.8625,
+                lng: -2.9752,
+                permission: "Check Landowner",
+                statusClass: "bg-emerald-500/20 text-emerald-400 border-emerald-500/30",
+                wind: "14 mph W",
+                visibility: "22 km",
+                sunset: "⭐ 9.7/10 (Monmouthshire Sunset)",
+                desc: "Striking holy mountain with a dramatic landslide scar on its western flank.",
+                phone: "+44 1874 623366",
+                email: "enquiries@beacons-npa.gov.uk"
+            },
+            {
+                id: 47,
+                name: "Abergavenny Castle Area",
+                category: "Town & Mountains",
+                lat: 51.8225,
+                lng: -3.0185,
+                permission: "Cadw Permission",
+                statusClass: "bg-amber-500/20 text-amber-400 border-amber-500/30",
+                wind: "11 mph W",
+                visibility: "18 km",
+                sunset: "⭐ 9.5/10 (Historic Castle Walls)",
+                desc: "Historic castle ruins overlooking the gateway to the Bannau Brycheiniog.",
+                phone: "+44 1443 821621",
+                email: "cadw@gov.wales"
+            },
+            {
+                id: 48,
+                name: "Tintern Abbey",
+                category: "Historic Abbey",
+                lat: 51.6985,
+                lng: -2.6785,
+                permission: "Cadw Permission",
+                statusClass: "bg-amber-500/20 text-amber-400 border-amber-500/30",
+                wind: "10 mph W",
+                visibility: "18 km",
+                sunset: "⭐ 9.9/10 (Wye Valley Gothic Masterpiece)",
+                desc: "Iconic national monument and roofless medieval abbey on the banks of the River Wye.",
+                phone: "+44 1443 821621",
+                email: "cadw@gov.wales"
+            },
+            {
+                id: 49,
+                name: "Wye Valley Viewpoints",
+                category: "Valley Gorge",
+                lat: 51.7152,
+                lng: -2.6852,
+                permission: "Check Land Access",
+                statusClass: "bg-emerald-500/20 text-emerald-400 border-emerald-500/30",
+                wind: "11 mph W",
+                visibility: "19 km",
+                sunset: "⭐ 9.8/10 (Symonds Yat Gorge)",
+                desc: "Magnificent wooded river gorge and dramatic limestone cliffs along the border.",
+                phone: "+44 300 065 3000",
+                email: "enquiries@naturalresourceswales.gov.uk"
+            },
+
+            // WELSH 100 MOUNTAIN PEAKS (SNOWDONIA / ERYRI)
+            {
+                id: 50,
+                name: "Yr Wyddfa (Snowdon) Summit",
+                category: "Mountain #1",
                 lat: 53.0685,
                 lng: -4.0768,
-                permission: "Caution: High Altitude & Mountain Winds",
+                permission: "Caution: High Alpine Winds & Visitors",
                 statusClass: "bg-amber-500/20 text-amber-400 border-amber-500/30",
                 wind: "22 mph W",
-                visibility: "10 km",
-                sunset: "⭐ 9.8/10 (Epic Alpine Glow)",
-                desc: "Highest peak in Wales and England. Majestic ridge lines. Ensure drone is never more than 120m from the steep mountain surface.",
+                visibility: "12 km",
+                sunset: "⭐ 9.9/10 (Highest Peak Sunset)",
+                desc: "Highest peak in Wales and England (1,085m). Majestic ridge lines of Crib Goch.",
                 phone: "+44 1766 770274",
                 email: "info@eryri.llyw.cymru"
             },
             {
-                id: 2,
-                name: "Conwy Castle & Estuary",
-                category: "Castle",
-                lat: 53.2828,
-                lng: -3.8260,
-                permission: "Restricted (Cadw Grounds / Estuary Check)",
-                statusClass: "bg-amber-500/20 text-amber-400 border-amber-500/30",
-                wind: "11 mph NW",
-                visibility: "14 km",
-                sunset: "⭐ 9.5/10 (Stunning Golden Reflections)",
-                desc: "Magnificent medieval fortress by Cadw. Take-off prohibited from castle walls, but estuarial flights possible with landowner notification.",
-                phone: "+44 1492 592358",
-                email: "cadw@gov.wales"
-            },
-            {
-                id: 3,
-                name: "Rhossili Sunflower & Lavender Fields, Gower",
-                category: "Field",
-                lat: 51.5878,
-                lng: -4.2862,
-                permission: "Permitted (National Trust Land Rules Apply)",
-                statusClass: "bg-emerald-500/20 text-emerald-400 border-emerald-500/30",
-                wind: "12 mph NW",
-                visibility: "15 km",
-                sunset: "⭐ 9.9/10 (Breathtaking Ocean Sunset)",
-                desc: "Famous seasonal coastal fields overlooking cliffs and 3 miles of golden sand. National Trust permits recreational flights.",
-                phone: "+44 1792 390636",
-                email: "gower@nationaltrust.org.uk"
-            },
-            {
-                id: 4,
-                name: "Lake Vyrnwy Reservoir & Gothic Tower",
-                category: "Lake / Reservoir",
-                lat: 52.7485,
-                lng: -3.4682,
-                permission: "Permitted (Welsh Water / Dŵr Cymru)",
-                statusClass: "bg-emerald-500/20 text-emerald-400 border-emerald-500/30",
-                wind: "10 mph W",
-                visibility: "16 km",
-                sunset: "⭐ 9.7/10 (Glassy Mirror Water)",
-                desc: "Victorian dam, gothic straining tower, and expansive forested lake waters. Excellent cinematic mirror reflections.",
-                phone: "+44 1440 820000",
-                email: "customer.service@dwrcymru.com"
-            },
-            {
-                id: 5,
-                name: "Caerphilly Castle & Moat",
-                category: "Castle",
-                lat: 51.5794,
-                lng: -3.2185,
-                permission: "Restricted (Cadw Property)",
-                statusClass: "bg-rose-500/20 text-rose-400 border-rose-500/30",
-                wind: "8 mph S",
-                visibility: "12 km",
-                sunset: "⭐ 9.0/10 (Lovely Moat Glow)",
-                desc: "Largest castle in Wales surrounded by massive reflective lakes. Commercial/recreational permit required from Cadw.",
-                phone: "+44 300 025 6000",
-                email: "cadw@gov.wales"
-            },
-            {
-                id: 6,
-                name: "Brecon Beacons Rolling Green Fields",
-                category: "Field",
-                lat: 51.8890,
-                lng: -3.4395,
-                permission: "Permitted (National Park Guidelines)",
-                statusClass: "bg-emerald-500/20 text-emerald-400 border-emerald-500/30",
-                wind: "14 mph SW",
-                visibility: "20 km",
-                sunset: "⭐ 9.6/10 (Vast Valley Sunsets)",
-                desc: "Lush green agricultural fields rolling into dramatic mountain ridges. Open access paths and friendly farming estates.",
-                phone: "+44 1874 623366",
-                email: "enquiries@beacons-npa.gov.uk"
-            },
-
-            // ENGLAND
-            {
-                id: 7,
-                name: "Bodiam Castle, East Sussex",
-                category: "Castle",
-                lat: 51.0042,
-                lng: 0.5432,
-                permission: "Permitted (National Trust Guidelines)",
-                statusClass: "bg-emerald-500/20 text-emerald-400 border-emerald-500/30",
-                wind: "9 mph S",
-                visibility: "14 km",
-                sunset: "⭐ 9.8/10 (Classic Moated Sunset)",
-                desc: "Moated 14th-century castle. National Trust permits take-off from designated perimeter parkland paths.",
-                phone: "+44 1580 830196",
-                email: "bodiamcastle@nationaltrust.org.uk"
-            },
-            {
-                id: 8,
-                name: "Cotswolds Lavender & Rolling Fields, Broadway",
-                category: "Field",
-                lat: 52.0385,
-                lng: -1.8542,
-                permission: "Permitted (Private Estate / Public Rights)",
-                statusClass: "bg-emerald-500/20 text-emerald-400 border-emerald-500/30",
-                wind: "8 mph W",
-                visibility: "18 km",
-                sunset: "⭐ 9.9/10 (Lavender Horizon Glow)",
-                desc: "Stunning purple lavender fields and golden Cotswolds stone walls. Perfect for aerial line-tracking shots.",
-                phone: "+44 1386 854821",
-                email: "enquiries@cotswoldslavender.co.uk"
-            },
-            {
-                id: 9,
-                name: "Ladybower Reservoir & Plug Holes, Peak District",
-                category: "Lake / Reservoir",
-                lat: 53.3742,
-                lng: -1.7428,
-                permission: "Permitted (Severn Trent Water Rules)",
-                statusClass: "bg-emerald-500/20 text-emerald-400 border-emerald-500/30",
-                wind: "14 mph W",
-                visibility: "15 km",
-                sunset: "⭐ 9.6/10 (Dramatically Lit Valley)",
-                desc: "Famous for its unique overflow plugholes and surrounding dark moorland fields.",
-                phone: "+44 24 7771 5000",
-                email: "customer.relations@stwater.co.uk"
-            },
-            {
-                id: 10,
-                name: "Windsor Castle Perimeter Fields",
-                category: "Castle",
-                lat: 51.4839,
-                lng: -0.6044,
-                permission: "Restricted (Royal Windsor FRZ)",
-                statusClass: "bg-rose-500/20 text-rose-400 border-rose-500/30",
-                wind: "7 mph E",
-                visibility: "10 km",
-                height: "Strictly Prohibited (FRZ)",
-                desc: "Official royal residence with strict Flight Restriction Zone (FRZ) enforcing 24/7 airspace bans.",
-                phone: "+44 333 023 5065",
-                email: "feedback@rct.uk"
-            },
-            {
-                id: 13,
-                name: "Durdle Door & Jurassic Coast",
-                category: "Coastal",
-                lat: 50.6215,
-                lng: -2.2778,
-                permission: "Permitted (Lulworth Estate Rules)",
-                statusClass: "bg-emerald-500/20 text-emerald-400 border-emerald-500/30",
-                wind: "10 mph SE",
-                visibility: "15 km",
-                sunset: "⭐ 10/10 (Arch Silhouetted Sunset)",
-                desc: "World-famous limestone arch plunging into the sea. Incredible golden hour lighting through the rock opening.",
-                phone: "+44 1929 400155",
-                email: "estate@lulworth.com"
-            },
-            {
-                id: 14,
-                name: "Scafell Pike & Wastwater, Lake District",
-                category: "Mountain",
-                lat: 54.4542,
-                lng: -3.2115,
-                permission: "Caution: High Altitude & Weather",
+                id: 51,
+                name: "Crib y Ddysgl (Garnedd Ugain)",
+                category: "Mountain #2",
+                lat: 53.0722,
+                lng: -4.0685,
+                permission: "Caution: Exposed Ridge",
                 statusClass: "bg-amber-500/20 text-amber-400 border-amber-500/30",
                 wind: "24 mph W",
                 visibility: "12 km",
-                sunset: "⭐ 9.7/10 (Dramatic Peak Shadows)",
-                desc: "England's highest mountain overlooking England's deepest lake. Rugged rocky terrain and high winds.",
-                phone: "+44 1539 724555",
-                email: "lakedistrict@nationaltrust.org.uk"
+                sunset: "⭐ 9.7/10 (Snowdon Massif Glow)",
+                desc: "Second highest peak in Wales (1,065m), forming part of the Snowdon horseshoe ridge.",
+                phone: "+44 1766 770274",
+                email: "info@eryri.llyw.cymru"
             },
-
-            // SCOTLAND
             {
-                id: 15,
-                name: "Edinburgh Castle & Old Town",
-                category: "Castle",
-                lat: 55.9486,
-                lng: -3.2008,
-                permission: "Restricted (Historic Environment Scotland)",
-                statusClass: "bg-rose-500/20 text-rose-400 border-rose-500/30",
-                wind: "12 mph W",
+                id: 52,
+                name: "Carnedd Llewelyn",
+                category: "Mountain #3",
+                lat: 53.1395,
+                lng: -3.9552,
+                permission: "Permitted (Carneddau Range)",
+                statusClass: "bg-emerald-500/20 text-emerald-400 border-emerald-500/30",
+                wind: "20 mph NW",
                 visibility: "15 km",
-                sunset: "⭐ 9.8/10 (Volcanic Rock Skyline)",
-                desc: "Historic fortress dominating Edinburgh skyline. Strict bans on launching from castle rock or Princes Street gardens.",
-                phone: "+44 131 668 8600",
-                email: "hmcs@hes.scot"
+                sunset: "⭐ 9.8/10 (Wild Carneddau Horizon)",
+                desc: "Third highest peak in Wales (1,064m) located in the vast, wild Carneddau upland plateau.",
+                phone: "+44 1766 770274",
+                email: "info@eryri.llyw.cymru"
             },
             {
-                id: 16,
-                name: "Eilean Donan Castle, Highlands",
-                category: "Castle",
-                lat: 57.2758,
-                lng: -5.5161,
-                permission: "Permitted (Private Estate Permission)",
+                id: 53,
+                name: "Glyder Fawr",
+                category: "Mountain #5",
+                lat: 53.1115,
+                lng: -4.0325,
+                permission: "Permitted (Glyderau Range)",
                 statusClass: "bg-emerald-500/20 text-emerald-400 border-emerald-500/30",
-                wind: "11 mph W",
-                visibility: "20 km",
-                sunset: "⭐ 10/10 (Legendary Highland Sunset)",
-                desc: "One of Scotland's most iconic island castles where three sea lochs meet. Breathtaking cinematic mirror water reflections.",
-                phone: "+44 1599 555202",
-                email: "admin@eileandonancastle.com"
+                wind: "18 mph W",
+                visibility: "14 km",
+                sunset: "⭐ 9.7/10 (Cantilever Stone Glow)",
+                desc: "Fifth highest peak in Wales (999m), famous for chaotic rock formations.",
+                phone: "+44 1766 770274",
+                email: "info@eryri.llyw.cymru"
             },
             {
-                id: 17,
-                name: "Glencoe Valley & Green Fields",
-                category: "Mountain",
-                lat: 56.6827,
-                lng: -5.1025,
-                permission: "Permitted (National Trust for Scotland)",
-                statusClass: "bg-emerald-500/20 text-emerald-400 border-emerald-500/30",
-                wind: "16 mph NW",
-                visibility: "18 km",
-                sunset: "⭐ 9.9/10 (Dramatic Ray Beams)",
-                desc: "Deep sculpted valleys and towering steep mountains. Unmatched cinematic grandeur for soaring FPV or drone pans.",
-                phone: "+44 131 248 6384",
-                email: "information@nts.org.uk"
-            },
-            {
-                id: 18,
-                name: "Loch Lomond & The Trossachs",
-                category: "Lake / Reservoir",
-                lat: 56.0905,
-                lng: -4.6360,
-                permission: "Permitted (National Park Authority)",
-                statusClass: "bg-emerald-500/20 text-emerald-400 border-emerald-500/30",
-                wind: "10 mph SW",
-                visibility: "16 km",
-                sunset: "⭐ 9.7/10 (Loch Island Silhouettes)",
-                desc: "Stunning Scottish loch dotted with wooded islands and surrounded by majestic green hills.",
-                phone: "+44 1389 722600",
-                email: "info@lochlomond-trossachs.org"
-            },
-
-            // NORTHERN IRELAND
-            {
-                id: 19,
-                name: "Dunluce Castle, County Antrim",
-                category: "Castle",
-                lat: 55.2127,
-                lng: -6.5794,
-                permission: "Restricted (Department for Communities NI)",
+                id: 54,
+                name: "Crib Goch",
+                category: "Mountain #14",
+                lat: 53.0785,
+                lng: -4.0555,
+                permission: "Caution: Extremely Narrow Knife-Edge Ridge",
                 statusClass: "bg-rose-500/20 text-rose-400 border-rose-500/30",
-                wind: "18 mph NW",
-                visibility: "20 km",
-                sunset: "⭐ 10/10 (Dramatic Clifftop Golden Hour)",
-                desc: "Medieval castle ruins perched precariously on basalt cliffs on the Antrim coast. High coastal winds require caution.",
-                phone: "+44 28 9025 3020",
-                email: "scni@communities-ni.gov.uk"
+                wind: "26 mph W",
+                visibility: "12 km",
+                sunset: "⭐ 10/10 (Dramatic Ridge Silhouette)",
+                desc: "Legendary grade 1 knife-edge scramble (923m) on Snowdon's eastern flank.",
+                phone: "+44 1766 770274",
+                email: "info@eryri.llyw.cymru"
             },
             {
-                id: 20,
-                name: "Mourne Mountains Rolling Fields",
-                category: "Mountain",
-                lat: 54.1750,
-                lng: -5.9030,
-                permission: "Permitted (Mourne Heritage Trust)",
+                id: 55,
+                name: "Tryfan",
+                category: "Mountain #15",
+                lat: 53.1185,
+                lng: -4.0115,
+                permission: "Permitted (Iconic Scrambling Peak)",
                 statusClass: "bg-emerald-500/20 text-emerald-400 border-emerald-500/30",
-                wind: "13 mph S",
-                visibility: "22 km",
-                sunset: "⭐ 9.8/10 (Granite Peak Glow)",
-                desc: "Granite mountains surrounded by iconic patchwork green fields and the famous Mourne Wall.",
-                phone: "+44 28 4372 4059",
-                email: "info@mournelive.com"
+                wind: "17 mph W",
+                visibility: "16 km",
+                sunset: "⭐ 9.9/10 (Adam and Eve Summit Sunset)",
+                desc: "Britain's most famous rocky peak (915m) with the iconic summit monoliths Adam and Eve.",
+                phone: "+44 1766 770274",
+                email: "info@eryri.llyw.cymru"
+            },
+            {
+                id: 56,
+                name: "Aran Fawddwy",
+                category: "Mountain #16",
+                lat: 52.7835,
+                lng: -3.6625,
+                permission: "Permitted (Arans Range)",
+                statusClass: "bg-emerald-500/20 text-emerald-400 border-emerald-500/30",
+                wind: "14 mph SW",
+                visibility: "18 km",
+                sunset: "⭐ 9.7/10 (Southern Snowdonia Glow)",
+                desc: "Highest peak in southern Snowdonia (905m), remote and rugged with sweeping ridge views.",
+                phone: "+44 1341 422438",
+                email: "info@eryri.llyw.cymru"
+            },
+            {
+                id: 57,
+                name: "Cadair Idris (Pen y Gadair)",
+                category: "Mountain #18",
+                lat: 52.6985,
+                lng: -3.9052,
+                permission: "Permitted (Southern Snowdonia)",
+                statusClass: "bg-emerald-500/20 text-emerald-400 border-emerald-500/30",
+                wind: "16 mph SW",
+                visibility: "16 km",
+                sunset: "⭐ 9.9/10 (Mawddach Estuary Ocean Sunset)",
+                desc: "Majestic glacial amphitheatre and iconic peak (893m) overlooking Cardigan Bay.",
+                phone: "+44 1341 422438",
+                email: "info@eryri.llyw.cymru"
             }
         ];
 
@@ -532,9 +1121,9 @@
             menu.classList.toggle('hidden');
         }
 
-        // Initialize Leaflet Map with Satellite Tiles
+        // Initialize Leaflet Map with Satellite Tiles centered on Cardiff / South Wales
         function initMap() {
-            map = L.map('map', { zoomControl: false }).setView([54.5, -4.0], 6);
+            map = L.map('map', { zoomControl: false }).setView([51.4816, -3.1791], 10);
 
             // Esri World Imagery Satellite Tile Layer
             L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
@@ -554,7 +1143,7 @@
             spotsToRender.forEach(spot => {
                 const customIcon = L.divIcon({
                     className: 'custom-div-icon',
-                    html: `<div class="bg-sky-600 text-white p-2 rounded-full shadow-lg border-2 border-white flex items-center justify-center hover:scale-110 transition"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="transform -rotate-45"><path d="M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.5 1.2c-.2.5 0 1.1.4 1.4l5 4-3.5 3.5-2-.5-1 1 3 2 2 3 1-1-.5-2 3.5-3.5 4 5c.3.4.9.6 1.4.4l1.2-.5c.4-.2.6-.6.5-1.1z"/></svg></div>`,
+                    html: `<div class="bg-sky-600 text-white p-2 rounded-full shadow-lg border-2 border-white flex items-center justify-center hover:scale-110 transition"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m8 3 4 8 5-5 5 15H2L8 3z"/></svg></div>`,
                     iconSize: [28, 28],
                     iconAnchor: [14, 14]
                 });
@@ -563,7 +1152,7 @@
                 
                 marker.on('click', () => {
                     selectSpot(spot);
-                    map.flyTo([spot.lat, spot.lng], 12, { duration: 1.2 });
+                    map.flyTo([spot.lat, spot.lng], 13, { duration: 1.2 });
                 });
 
                 markersMap[spot.id] = marker;
@@ -608,10 +1197,12 @@
                     map.flyTo([lat, lng], 13, { duration: 1.5 });
 
                     document.getElementById('overlayLocationTitle').innerText = "Your GPS Location";
-                    document.getElementById('permissionBadge').innerText = "Open Category / Check Local Landowner";
+                    document.getElementById('permissionBadge').innerText = "Open Category / Check Landowner";
                     document.getElementById('permissionBadge').className = "text-[10px] px-2 py-0.5 rounded font-bold bg-sky-500/20 text-sky-400 border border-sky-500/30";
-                    document.getElementById('sunsetStat').innerText = "⭐ 9.5/10 (Local View)";
-                    document.getElementById('permissionDescription').innerText = "Live satellite coordinates acquired. Maintain VLOS, stay below 400ft, and verify local landowner or council bylaws.";
+                    document.getElementById('windStat').innerText = "10 mph W";
+                    document.getElementById('visibilityStat').innerText = "15 km";
+                    document.getElementById('sunsetStat').innerText = "⭐ 9.5/10 (Local Sunset)";
+                    document.getElementById('permissionDescription').innerText = "Live GPS coordinates acquired. Maintain VLOS, stay below 400ft, and verify local council or park bylaws.";
                     document.getElementById('contactBox').classList.add('hidden');
                 }, () => {
                     alert("Unable to retrieve your location. Please check browser permissions.");
@@ -648,7 +1239,7 @@
                             <span>Phone: <a href="tel:${spot.phone}" class="text-sky-400 hover:underline font-medium">${spot.phone}</a></span>
                         </div>
                         <div class="flex items-center justify-between text-slate-400">
-                            <span>Email: <a href="mailto:${spot.email}" class="text-sky-400 hover:underline font-medium">${spot.email}</a></span>
+                            <span>Email: <a href="mailto:${spot.email}" class="text-sky-400 hover:underline font-medium">${spot.email}</span></a>
                         </div>
                         <div class="pt-1 flex justify-end">
                             <button onclick="switchTab('map'); selectSpot(scenicSpots.find(s => s.id === ${spot.id})); map.flyTo([${spot.lat}, ${spot.lng}], 13);" class="text-sky-400 hover:underline font-semibold flex items-center space-x-1 cursor-pointer">
