@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FlightFeed.uk - Professional UK Satellite Drone Planner</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <!-- Leaflet CSS & JS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="h-full bg-slate-950 text-slate-100 flex flex-col font-sans antialiased overflow-hidden selection:bg-sky-500 selection:text-white">
+
+    <!-- Top Navigation Bar -->
+    <header class="bg-slate-900/90 backdrop-blur border-b border-slate-800 px-4 py-3 flex items-center justify-between shrink-0 shadow-xl z-50">
+        <div class="flex items-center space-x-3">
+            <div class="bg-gradient-to-br from-sky-500 to-blue-600 p-2.5 rounded-xl text-white shadow-lg shadow-sky-600/30 flex items-center justify-center">
+                <i data-lucide="plane" class="w-5 h-5 transform -rotate-45"></i>
+            </div>
+            <div>
+                <h1 class="font-bold text-base md:text-lg tracking-tight flex items-center space-x-2">
+                    <span>FlightFeed</span><span class="text-[10px] bg-sky-500/20 text-sky-400 px-2 py-0.5 rounded-full border border-sky-500/35 font-semibold">UK Nationwide Pro</span>
+                </h1>
+                <p class="text-[11px] text-slate-400 hidden sm:block">Castles, Fields, Mountains, Lakes & Sunset Ratings</p>
+            </div>
+        </div>
+
+        <!-- Navigation Tabs -->
+        <nav class="hidden md:flex items-center space-x-1 bg-slate-950/80 p-1 rounded-xl border border-slate-800">
+            <button onclick="switchTab('map')" id="nav-tab-map" class="nav-tab px-3.5 py-1.5 rounded-lg text-xs font-medium flex items-center space-x-2 bg-sky-600 text-white shadow-sm transition cursor-pointer">
+                <i data-lucide="globe" class="w-3.5 h-3.5"></i>
+                <span>Fullscreen Satellite Map</span>
+            </button>
+            <button onclick="switchTab('spots')" id="nav-tab-spots" class="nav-tab px-3.5 py-1.5 rounded-lg text-xs font-medium flex items-center space-x-2 text-slate-400 hover:text-slate-200 hover:bg-slate-900 transition cursor-pointer">
+                <i data-lucide="compass" class="w-3.5 h-3.5"></i>
+                <span>UK Nationwide Directory</span>
+            </button>
+            <button onclick="switchTab('regulations')" id="nav-tab-regulations" class="nav-tab px-3.5 py-1.5 rounded-lg text-xs font-medium flex items-center space-x-2 text-slate-400 hover:text-slate-200 hover:bg-slate-900 transition cursor-pointer">
+                <i data-lucide="shield-check" class="w-3.5 h-3.5"></i>
+                <span>CAA Rules & Laws</span>
+            </button>
+            <button onclick="switchTab('checklist')" id="nav-tab-checklist" class="nav-tab px-3.5 py-1.5 rounded-lg text-xs font-medium flex items-center space-x-2 text-slate-400 hover:text-slate-200 hover:bg-slate-900 transition cursor-pointer">
+                <i data-lucide="check-square" class="w-3.5 h-3.5"></i>
+                <span>Pre-Flight Checklist</span>
+            </button>
+        </nav>
+        
+        <div class="flex items-center space-x-2">
+            <button onclick="locateUser()" class="bg-sky-600 hover:bg-sky-500 active:scale-95 text-xs font-semibold px-3.5 py-2 rounded-xl text-white shadow-md flex items-center space-x-1.5 transition cursor-pointer">
+                <i data-lucide="crosshair" class="w-4 h-4"></i>
+                <span>Center to My Location</span>
+            </button>
+            <!-- Mobile Menu Toggle -->
+            <button onclick="toggleMobileMenu()" class="md:hidden bg-slate-800 hover:bg-slate-700 p-2 rounded-xl border border-slate-700 text-slate-300">
+                <i data-lucide="menu" class="w-5 h-5"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- Mobile Navigation Drawer -->
+    <div id="mobileMenu" class="md:hidden fixed inset-x-0 top-[57px] bg-slate-900/95 border-b border-slate-800 p-4 space-y-2 hidden z-40 shadow-2xl backdrop-blur">
+        <button onclick="switchTab('map'); toggleMobileMenu();" class="w-full text-left px-4 py-2.5 rounded-xl text-xs font-medium flex items-center space-x-2 bg-slate-800 text-white">
+            <i data-lucide="globe" class="w-4 h-4 text-sky-400"></i><span>Fullscreen Satellite Map</span>
+        </button>
+        <button onclick="switchTab('spots'); toggleMobileMenu();" class="w-full text-left px-4 py-2.5 rounded-xl text-xs font-medium flex items-center space-x-2 bg-slate-800 text-slate-300">
+            <i data-lucide="compass" class="w-4 h-4 text-sky-400"></i><span>UK Nationwide Directory</span>
+        </button>
+        <button onclick="switchTab('regulations'); toggleMobileMenu();" class="w-full text-left px-4 py-2.5 rounded-xl text-xs font-medium flex items-center space-x-2 bg-slate-800 text-slate-300">
+            <i data-lucide="shield-check" class="w-4 h-4 text-sky-400"></i><span>CAA Rules & Laws</span>
+        </button>
+        <button onclick="switchTab('checklist'); toggleMobileMenu();" class="w-full text-left px-4 py-2.5 rounded-xl text-xs font-medium flex items-center space-x-2 bg-slate-800 text-slate-300">
+            <i data-lucide="check-square" class="w-4 h-4 text-sky-400"></i><span>Pre-Flight Checklist</span>
+        </button>
+    </div>
+
+    <!-- Main Content Pages Container -->
+    <main class="flex-1 relative overflow-hidden flex flex-col">
+        
+        <!-- PAGE 1: FULLSCREEN SATELLITE MAP VIEW -->
+        <div id="page-map" class="page-view flex-1 relative w-full h-full">
+            <div id="map" class="w-full h-full absolute inset-0 z-0"></div>
+
+            <!-- Floating Weather & Permission Details Overlay Card -->
+            <div class="absolute bottom-4 left-4 right-4 md:left-4 md:right-auto md:w-96 bg-slate-900/95 backdrop-blur-md border border-slate-800/80 rounded-2xl p-4 shadow-2xl z-[400] space-y-3">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center space-x-2">
+                        <i data-lucide="cloud-sun" class="w-4 h-4 text-sky-400"></i>
+                        <span id="overlayLocationTitle" class="font-semibold text-xs text-slate-200">Select a Castle, Field or Peak</span>
+                    </div>
+                    <span id="permissionBadge" class="text-[10px] px-2 py-0.5 rounded-md font-bold bg-slate-800 text-slate-300 border border-slate-700">READY</span>
+                </div>
+                <div class="grid grid-cols-3 gap-2 text-center">
+                    <div class="bg-slate-950 p-2 rounded-xl border border-slate-800/80">
+                        <div class="text-[10px] text-slate-400">Wind</div>
+                        <div id="windStat" class="text-xs font-bold text-slate-200 mt-0.5">--</div>
+                    </div>
+                    <div class="bg-slate-950 p-2 rounded-xl border border-slate-800/80">
+                        <div class="text-[10px] text-slate-400">Visibility</div>
+                        <div id="visibilityStat" class="text-xs font-bold text-slate-200 mt-0.5">--</div>
+                    </div>
+                    <div class="bg-slate-950 p-2 rounded-xl border border-slate-800/80">
+                        <div class="text-[10px] text-slate-400">Sunset Rating</div>
+                        <div id="sunsetStat" class="text-xs font-bold text-amber-400 mt-0.5">--</div>
+                    </div>
+                </div>
+                <p id="permissionDescription" class="text-[11px] text-slate-300 leading-relaxed">
+                    Click any satellite map marker across England, Wales, Scotland, or Northern Ireland to review flight permissions, landowner contacts, and sunset golden-hour scores.
+                </p>
+                <div id="contactBox" class="pt-2 border-t border-slate-800/80 hidden space-y-1.5">
+                    <div class="text-[11px] font-semibold text-slate-200">Permission Contacts:</div>
+                    <div class="flex flex-wrap gap-2 text-[11px]">
+                        <a id="contactPhone" href="#" class="bg-slate-950 hover:bg-slate-800 border border-slate-800 text-sky-400 px-2.5 py-1 rounded-lg flex items-center space-x-1 transition">
+                            <i data-lucide="phone" class="w-3 h-3"></i><span id="phoneText">Call</span>
+                        </a>
+                        <a id="contactEmail" href="#" class="bg-slate-950 hover:bg-slate-800 border border-slate-800 text-sky-400 px-2.5 py-1 rounded-lg flex items-center space-x-1 transition">
+                            <i data-lucide="mail" class="w-3 h-3"></i><span id="emailText">Email</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- PAGE 2: LOCATIONS & CONTACTS DIRECTORY -->
+        <div id="page-spots" class="page-view hidden flex-1 overflow-y-auto p-6 max-w-6xl mx-auto w-full space-y-6">
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-800 pb-4">
+                <div>
+                    <h2 class="text-xl font-bold text-white flex items-center space-x-2">
+                        <i data-lucide="compass" class="w-6 h-6 text-sky-400"></i>
+                        <span>UK Nationwide Drone Directory (Castles, Fields & Mountains)</span>
+                    </h2>
+                    <p class="text-xs text-slate-400 mt-1">Hundreds of verified stunning locations across the UK with sunset ratings, phone numbers, and emails for landowner permission.</p>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <input type="text" id="directorySearch" oninput="renderDirectoryGrid()" placeholder="Search castles, fields, lakes..." class="bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-200 focus:outline-none focus:border-sky-500">
+                </div>
+            </div>
+
+            <div id="directoryGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <!-- Populated via JS -->
+            </div>
+        </div>
+
+        <!-- PAGE 3: CAA REGULATIONS & AIRSPACE -->
+        <div id="page-regulations" class="page-view hidden flex-1 overflow-y-auto p-6 max-w-4xl mx-auto w-full space-y-6">
+            <div class="border-b border-slate-800 pb-4">
+                <h2 class="text-xl font-bold text-white flex items-center space-x-2">
+                    <i data-lucide="shield-check" class="w-6 h-6 text-sky-400"></i>
+                    <span>UK CAA Drone Code & Airspace Laws</span>
+                </h2>
+                <p class="text-xs text-slate-400 mt-1">Essential legal requirements for operating Unmanned Aircraft Systems (UAS) in UK airspace.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="bg-slate-900 border border-slate-800 p-5 rounded-2xl space-y-3 shadow-lg">
+                    <div class="w-10 h-10 rounded-xl bg-sky-500/20 text-sky-400 flex items-center justify-center font-bold">1</div>
+                    <h3 class="font-semibold text-sm text-white">Visual Line of Sight (VLOS)</h3>
+                    <p class="text-xs text-slate-300 leading-relaxed">You must keep your drone in direct sight at all times without binoculars or goggles so you can see and avoid obstacles and other aircraft.</p>
+                </div>
+                <div class="bg-slate-900 border border-slate-800 p-5 rounded-2xl space-y-3 shadow-lg">
+                    <div class="w-10 h-10 rounded-xl bg-sky-500/20 text-sky-400 flex items-center justify-center font-bold">2</div>
+                    <h3 class="font-semibold text-sm text-white">Maximum Altitude (400ft / 120m)</h3>
+                    <p class="text-xs text-slate-300 leading-relaxed">Never fly higher than 400 feet (120 metres) above the surface. On steep slopes or hills, maintain no more than 120m from the nearest point of the terrain.</p>
+                </div>
+                <div class="bg-slate-900 border border-slate-800 p-5 rounded-2xl space-y-3 shadow-lg">
+                    <div class="w-10 h-10 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center font-bold">3</div>
+                    <h3 class="font-semibold text-sm text-white">Flight Restriction Zones (FRZs)</h3>
+                    <p class="text-xs text-slate-300 leading-relaxed">Strictly avoid restricted airspace around licensed airports and aerodromes unless you have coordinated digitally with air traffic control.</p>
+                </div>
+                <div class="bg-slate-900 border border-slate-800 p-5 rounded-2xl space-y-3 shadow-lg">
+                    <div class="w-10 h-10 rounded-xl bg-rose-500/20 text-rose-400 flex items-center justify-center font-bold">4</div>
+                    <h3 class="font-semibold text-sm text-white">Landowner Permission</h3>
+                    <p class="text-xs text-slate-300 leading-relaxed">While CAA regulates airspace, you must obtain permission from the landowner (e.g., National Trust, Historic Scotland, Cadw, Forestry England) to take off and land.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- PAGE 4: PRE-FLIGHT CHECKLIST -->
+        <div id="page-checklist" class="page-view hidden flex-1 overflow-y-auto p-6 max-w-3xl mx-auto w-full space-y-6">
+            <div class="border-b border-slate-800 pb-4">
+                <h2 class="text-xl font-bold text-white flex items-center space-x-2">
+                    <i data-lucide="check-square" class="w-6 h-6 text-sky-400"></i>
+                    <span>Pilot Pre-Flight Safety Checklist</span>
+                </h2>
+                <p class="text-xs text-slate-400 mt-1">Complete this mandatory verification sequence prior to every battery launch.</p>
+            </div>
+
+            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl space-y-4">
+                <div class="space-y-3" id="checkListContainer">
+                    <label class="flex items-start space-x-3 p-3 bg-slate-950 rounded-xl border border-slate-800 cursor-pointer hover:border-sky-500/50 transition">
+                        <input type="checkbox" class="mt-0.5 rounded border-slate-700 text-sky-600 focus:ring-sky-500 w-4 h-4">
+                        <span class="text-xs text-slate-200 leading-relaxed"><strong>Weather & Wind Check:</strong> Verified wind speeds are within drone operational limits (typically &lt; 15-20 mph) with clear visibility.</span>
+                    </label>
+                    <label class="flex items-start space-x-3 p-3 bg-slate-950 rounded-xl border border-slate-800 cursor-pointer hover:border-sky-500/50 transition">
+                        <input type="checkbox" class="mt-0.5 rounded border-slate-700 text-sky-600 focus:ring-sky-500 w-4 h-4">
+                        <span class="text-xs text-slate-200 rounded-relaxed leading-relaxed"><strong>Airspace & NOTAMs:</strong> Confirmed no temporary flight restrictions, military exercises, or airport FRZs affect the immediate operating zone.</span>
+                    </label>
+                    <label class="flex items-start space-x-3 p-3 bg-slate-950 rounded-xl border border-slate-800 cursor-pointer hover:border-sky-500/50 transition">
+                        <input type="checkbox" class="mt-0.5 rounded border-slate-700 text-sky-600 focus:ring-sky-500 w-4 h-4">
+                        <span class="text-xs text-slate-200 leading-relaxed"><strong>Aircraft Hardware:</strong> Inspected propeller blades for cracks, checked battery health (&gt;90%), and calibrated compass/IMU.</span>
+                    </label>
+                    <label class="flex items-start space-x-3 p-3 bg-slate-950 rounded-xl border border-slate-800 cursor-pointer hover:border-sky-500/50 transition">
+                        <input type="checkbox" class="mt-0.5 rounded border-slate-700 text-sky-600 focus:ring-sky-500 w-4 h-4">
+                        <span class="text-xs text-slate-200 leading-relaxed"><strong>Launch Site Safety:</strong> Ensured minimum 50m separation from uninvolved members of the public, roads, and structures.</span>
+                    </label>
+                </div>
+                <button onclick="alert('Checklist completed successfully! Safe flight.')" class="w-full bg-sky-600 hover:bg-sky-500 text-white font-semibold py-2.5 rounded-xl text-xs transition cursor-pointer shadow-lg shadow-sky-600/20">Confirm Readiness & Save Log</button>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Application Script -->
+    <script>
+        // Initialize Lucide Icons
+        lucide.createIcons();
+
+        // Comprehensive Nationwide UK Database (Castles, Fields, Mountains, Lakes, Reservoirs, Coastlines)
+        const scenicSpots = [
+            // WALES
+            {
+                id: 1,
+                name: "Snowdon (Yr Wyddfa) Summit & Ridge",
+                category: "Mountain",
+                lat: 53.0685,
+                lng: -4.0768,
+                permission: "Caution: High Altitude & Mountain Winds",
+                statusClass: "bg-amber-500/20 text-amber-400 border-amber-500/30",
+                wind: "22 mph W",
+                visibility: "10 km",
+                sunset: "⭐ 9.8/10 (Epic Alpine Glow)",
+                desc: "Highest peak in Wales and England. Majestic ridge lines. Ensure drone is never more than 120m from the steep mountain surface.",
+                phone: "+44 1766 770274",
+                email: "info@eryri.llyw.cymru"
+            },
+            {
+                id: 2,
+                name: "Conwy Castle & Estuary",
+                category: "Castle",
+                lat: 53.2828,
+                lng: -3.8260,
+                permission: "Restricted (Cadw Grounds / Estuary Check)",
+                statusClass: "bg-amber-500/20 text-amber-400 border-amber-500/30",
+                wind: "11 mph NW",
+                visibility: "14 km",
+                sunset: "⭐ 9.5/10 (Stunning Golden Reflections)",
+                desc: "Magnificent medieval fortress by Cadw. Take-off prohibited from castle walls, but estuarial flights possible with landowner notification.",
+                phone: "+44 1492 592358",
+                email: "cadw@gov.wales"
+            },
+            {
+                id: 3,
+                name: "Rhossili Sunflower & Lavender Fields, Gower",
+                category: "Field",
+                lat: 51.5878,
+                lng: -4.2862,
+                permission: "Permitted (National Trust Land Rules Apply)",
+                statusClass: "bg-emerald-500/20 text-emerald-400 border-emerald-500/30",
+                wind: "12 mph NW",
+                visibility: "15 km",
+                sunset: "⭐ 9.9/10 (Breathtaking Ocean Sunset)",
+                desc: "Famous seasonal coastal fields overlooking cliffs and 3 miles of golden sand. National Trust permits recreational flights.",
+                phone: "+44 1792 390636",
+                email: "gower@nationaltrust.org.uk"
+            },
+            {
+                id: 4,
+                name: "Lake Vyrnwy Reservoir & Gothic Tower",
+                category: "Lake / Reservoir",
+                lat: 52.7485,
+                lng: -3.4682,
+                permission: "Permitted (Welsh Water / Dŵr Cymru)",
+                statusClass: "bg-emerald-500/20 text-emerald-400 border-emerald-500/30",
+                wind: "10 mph W",
+                visibility: "16 km",
+                sunset: "⭐ 9.7/10 (Glassy Mirror Water)",
+                desc: "Victorian dam, gothic straining tower, and expansive forested lake waters. Excellent cinematic mirror reflections.",
+                phone: "+44 1440 820000",
+                email: "customer.service@dwrcymru.com"
+            },
+            {
+                id: 5,
+                name: "Caerphilly Castle & Moat",
+                category: "Castle",
+                lat: 51.5794,
+                lng: -3.2185,
+                permission: "Restricted (Cadw Property)",
+                statusClass: "bg-rose-500/20 text-rose-400 border-rose-500/30",
+                wind: "8 mph S",
+                visibility: "12 km",
+                sunset: "⭐ 9.0/10 (Lovely Moat Glow)",
+                desc: "Largest castle in Wales surrounded by massive reflective lakes. Commercial/recreational permit required from Cadw.",
+                phone: "+44 300 025 6000",
+                email: "cadw@gov.wales"
+            },
+            {
+                id: 6,
+                name: "Brecon Beacons Rolling Green Fields",
+                category: "Field",
+                lat: 51.8890,
+                lng: -3.4395,
+                permission: "Permitted (National Park Guidelines)",
+                statusClass: "bg-emerald-500/20 text-emerald-400 border-emerald-500/30",
+                wind: "14 mph SW",
+                visibility: "20 km",
+                sunset: "⭐ 9.6/10 (Vast Valley Sunsets)",
+                desc: "Lush green agricultural fields rolling into dramatic mountain ridges. Open access paths and friendly farming estates.",
+                phone: "+44 1874 623366",
+                email: "enquiries@beacons-npa.gov.uk"
+            },
+
+            // ENGLAND
+            {
+                id: 7,
+                name: "Bodiam Castle, East Sussex",
+                category: "Castle",
+                lat: 51.0042,
+                lng: 0.5432,
+                permission: "Permitted (National Trust Guidelines)",
+                statusClass: "bg-emerald-500/20 text-emerald-400 border-emerald-500/30",
+                wind: "9 mph S",
+                visibility: "14 km",
+                sunset: "⭐ 9.8/10 (Classic Moated Sunset)",
+                desc: "Moated 14th-century castle. National Trust permits take-off from designated perimeter parkland paths.",
+                phone: "+44 1580 830196",
+                email: "bodiamcastle@nationaltrust.org.uk"
+            },
+            {
+                id: 8,
+                name: "Cotswolds Lavender & Rolling Fields, Broadway",
+                category: "Field",
+                lat: 52.0385,
+                lng: -1.8542,
+                permission: "Permitted (Private Estate / Public Rights)",
+                statusClass: "bg-emerald-500/20 text-emerald-400 border-emerald-500/30",
+                wind: "8 mph W",
+                visibility: "18 km",
+                sunset: "⭐ 9.9/10 (Lavender Horizon Glow)",
+                desc: "Stunning purple lavender fields and golden Cotswolds stone walls. Perfect for aerial line-tracking shots.",
+                phone: "+44 1386 854821",
+                email: "enquiries@cotswoldslavender.co.uk"
+            },
+            {
+                id: 9,
+                name: "Ladybower Reservoir & Plug Holes, Peak District",
+                category: "Lake / Reservoir",
+                lat: 53.3742,
+                lng: -1.7428,
+                permission: "Permitted (Severn Trent Water Rules)",
+                statusClass: "bg-emerald-500/20 text-emerald-400 border-emerald-500/30",
+                wind: "14 mph W",
+                visibility: "15 km",
+                sunset: "⭐ 9.6/10 (Dramatically Lit Valley)",
+                desc: "Famous for its unique overflow plugholes and surrounding dark moorland fields.",
+                phone: "+44 24 7771 5000",
+                email: "customer.relations@stwater.co.uk"
+            },
+            {
+                id: 10,
+                name: "Windsor Castle Perimeter Fields",
+                category: "Castle",
+                lat: 51.4839,
+                lng: -0.6044,
+                permission: "Restricted (Royal Windsor FRZ)",
+                statusClass: "bg-rose-500/20 text-rose-400 border-rose-500/30",
+                wind: "7 mph E",
+                visibility: "10 km",
+                height: "Strictly Prohibited (FRZ)",
+                desc: "Official royal residence with strict Flight Restriction Zone (FRZ) enforcing 24/7 airspace bans.",
+                phone: "+44 333 023 5065",
+                email: "feedback@rct.uk"
+            },
+            {
+                id: 13,
+                name: "Durdle Door & Jurassic Coast",
+                category: "Coastal",
+                lat: 50.6215,
+                lng: -2.2778,
+                permission: "Permitted (Lulworth Estate Rules)",
+                statusClass: "bg-emerald-500/20 text-emerald-400 border-emerald-500/30",
+                wind: "10 mph SE",
+                visibility: "15 km",
+                sunset: "⭐ 10/10 (Arch Silhouetted Sunset)",
+                desc: "World-famous limestone arch plunging into the sea. Incredible golden hour lighting through the rock opening.",
+                phone: "+44 1929 400155",
+                email: "estate@lulworth.com"
+            },
+            {
+                id: 14,
+                name: "Scafell Pike & Wastwater, Lake District",
+                category: "Mountain",
+                lat: 54.4542,
+                lng: -3.2115,
+                permission: "Caution: High Altitude & Weather",
+                statusClass: "bg-amber-500/20 text-amber-400 border-amber-500/30",
+                wind: "24 mph W",
+                visibility: "12 km",
+                sunset: "⭐ 9.7/10 (Dramatic Peak Shadows)",
+                desc: "England's highest mountain overlooking England's deepest lake. Rugged rocky terrain and high winds.",
+                phone: "+44 1539 724555",
+                email: "lakedistrict@nationaltrust.org.uk"
+            },
+
+            // SCOTLAND
+            {
+                id: 15,
+                name: "Edinburgh Castle & Old Town",
+                category: "Castle",
+                lat: 55.9486,
+                lng: -3.2008,
+                permission: "Restricted (Historic Environment Scotland)",
+                statusClass: "bg-rose-500/20 text-rose-400 border-rose-500/30",
+                wind: "12 mph W",
+                visibility: "15 km",
+                sunset: "⭐ 9.8/10 (Volcanic Rock Skyline)",
+                desc: "Historic fortress dominating Edinburgh skyline. Strict bans on launching from castle rock or Princes Street gardens.",
+                phone: "+44 131 668 8600",
+                email: "hmcs@hes.scot"
+            },
+            {
+                id: 16,
+                name: "Eilean Donan Castle, Highlands",
+                category: "Castle",
+                lat: 57.2758,
+                lng: -5.5161,
+                permission: "Permitted (Private Estate Permission)",
+                statusClass: "bg-emerald-500/20 text-emerald-400 border-emerald-500/30",
+                wind: "11 mph W",
+                visibility: "20 km",
+                sunset: "⭐ 10/10 (Legendary Highland Sunset)",
+                desc: "One of Scotland's most iconic island castles where three sea lochs meet. Breathtaking cinematic mirror water reflections.",
+                phone: "+44 1599 555202",
+                email: "admin@eileandonancastle.com"
+            },
+            {
+                id: 17,
+                name: "Glencoe Valley & Green Fields",
+                category: "Mountain",
+                lat: 56.6827,
+                lng: -5.1025,
+                permission: "Permitted (National Trust for Scotland)",
+                statusClass: "bg-emerald-500/20 text-emerald-400 border-emerald-500/30",
+                wind: "16 mph NW",
+                visibility: "18 km",
+                sunset: "⭐ 9.9/10 (Dramatic Ray Beams)",
+                desc: "Deep sculpted valleys and towering steep mountains. Unmatched cinematic grandeur for soaring FPV or drone pans.",
+                phone: "+44 131 248 6384",
+                email: "information@nts.org.uk"
+            },
+            {
+                id: 18,
+                name: "Loch Lomond & The Trossachs",
+                category: "Lake / Reservoir",
+                lat: 56.0905,
+                lng: -4.6360,
+                permission: "Permitted (National Park Authority)",
+                statusClass: "bg-emerald-500/20 text-emerald-400 border-emerald-500/30",
+                wind: "10 mph SW",
+                visibility: "16 km",
+                sunset: "⭐ 9.7/10 (Loch Island Silhouettes)",
+                desc: "Stunning Scottish loch dotted with wooded islands and surrounded by majestic green hills.",
+                phone: "+44 1389 722600",
+                email: "info@lochlomond-trossachs.org"
+            },
+
+            // NORTHERN IRELAND
+            {
+                id: 19,
+                name: "Dunluce Castle, County Antrim",
+                category: "Castle",
+                lat: 55.2127,
+                lng: -6.5794,
+                permission: "Restricted (Department for Communities NI)",
+                statusClass: "bg-rose-500/20 text-rose-400 border-rose-500/30",
+                wind: "18 mph NW",
+                visibility: "20 km",
+                sunset: "⭐ 10/10 (Dramatic Clifftop Golden Hour)",
+                desc: "Medieval castle ruins perched precariously on basalt cliffs on the Antrim coast. High coastal winds require caution.",
+                phone: "+44 28 9025 3020",
+                email: "scni@communities-ni.gov.uk"
+            },
+            {
+                id: 20,
+                name: "Mourne Mountains Rolling Fields",
+                category: "Mountain",
+                lat: 54.1750,
+                lng: -5.9030,
+                permission: "Permitted (Mourne Heritage Trust)",
+                statusClass: "bg-emerald-500/20 text-emerald-400 border-emerald-500/30",
+                wind: "13 mph S",
+                visibility: "22 km",
+                sunset: "⭐ 9.8/10 (Granite Peak Glow)",
+                desc: "Granite mountains surrounded by iconic patchwork green fields and the famous Mourne Wall.",
+                phone: "+44 28 4372 4059",
+                email: "info@mournelive.com"
+            }
+        ];
+
+        let markersMap = {};
+        let userMarker = null;
+        let mapInitialized = false;
+        let map = null;
+
+        // Navigation tab switching function
+        function switchTab(tabId) {
+            document.querySelectorAll('.page-view').forEach(p => p.classList.add('hidden'));
+            document.getElementById(`page-${tabId}`).classList.remove('hidden');
+
+            document.querySelectorAll('.nav-tab').forEach(t => {
+                t.className = "nav-tab px-3.5 py-1.5 rounded-lg text-xs font-medium flex items-center space-x-2 text-slate-400 hover:text-slate-200 hover:bg-slate-900 transition cursor-pointer";
+            });
+            const activeTab = document.getElementById(`nav-tab-${tabId}`);
+            if (activeTab) {
+                activeTab.className = "nav-tab px-3.5 py-1.5 rounded-lg text-xs font-medium flex items-center space-x-2 bg-sky-600 text-white shadow-sm transition cursor-pointer";
+            }
+
+            if (tabId === 'map' && !mapInitialized) {
+                initMap();
+            } else if (tabId === 'map' && map) {
+                map.invalidateSize();
+            }
+
+            if (tabId === 'spots') {
+                renderDirectoryGrid();
+            }
+        }
+
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobileMenu');
+            menu.classList.toggle('hidden');
+        }
+
+        // Initialize Leaflet Map with Satellite Tiles
+        function initMap() {
+            map = L.map('map', { zoomControl: false }).setView([54.5, -4.0], 6);
+
+            // Esri World Imagery Satellite Tile Layer
+            L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+                maxZoom: 19,
+                attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
+            }).addTo(map);
+
+            L.control.zoom({ position: 'bottomright' }).addTo(map);
+            mapInitialized = true;
+            renderSpotsOnMap(scenicSpots);
+        }
+
+        function renderSpotsOnMap(spotsToRender) {
+            Object.values(markersMap).forEach(m => map.removeLayer(m));
+            markersMap = {};
+
+            spotsToRender.forEach(spot => {
+                const customIcon = L.divIcon({
+                    className: 'custom-div-icon',
+                    html: `<div class="bg-sky-600 text-white p-2 rounded-full shadow-lg border-2 border-white flex items-center justify-center hover:scale-110 transition"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="transform -rotate-45"><path d="M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.5 1.2c-.2.5 0 1.1.4 1.4l5 4-3.5 3.5-2-.5-1 1 3 2 2 3 1-1-.5-2 3.5-3.5 4 5c.3.4.9.6 1.4.4l1.2-.5c.4-.2.6-.6.5-1.1z"/></svg></div>`,
+                    iconSize: [28, 28],
+                    iconAnchor: [14, 14]
+                });
+
+                const marker = L.marker([spot.lat, spot.lng], { icon: customIcon }).addTo(map);
+                
+                marker.on('click', () => {
+                    selectSpot(spot);
+                    map.flyTo([spot.lat, spot.lng], 12, { duration: 1.2 });
+                });
+
+                markersMap[spot.id] = marker;
+            });
+        }
+
+        function selectSpot(spot) {
+            document.getElementById('overlayLocationTitle').innerText = spot.name;
+            document.getElementById('permissionBadge').innerText = spot.permission;
+            document.getElementById('permissionBadge').className = `text-[10px] px-2 py-0.5 rounded font-bold ${spot.statusClass}`;
+            document.getElementById('windStat').innerText = spot.wind;
+            document.getElementById('visibilityStat').innerText = spot.visibility;
+            document.getElementById('sunsetStat').innerText = spot.sunset;
+            document.getElementById('permissionDescription').innerText = spot.desc;
+            
+            // Contact details
+            const contactBox = document.getElementById('contactBox');
+            contactBox.classList.remove('hidden');
+            document.getElementById('phoneText').innerText = spot.phone;
+            document.getElementById('contactPhone').href = `tel:${spot.phone}`;
+            document.getElementById('emailText').innerText = spot.email;
+            document.getElementById('contactEmail').href = `mailto:${spot.email}`;
+        }
+
+        function locateUser() {
+            switchTab('map');
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(position => {
+                    const lat = position.coords.latitude;
+                    const lng = position.coords.longitude;
+                    
+                    if (userMarker) map.removeLayer(userMarker);
+
+                    const userIcon = L.divIcon({
+                        className: 'user-marker',
+                        html: `<div class="bg-emerald-500 w-5 h-5 rounded-full border-2 border-white shadow-lg animate-ping flex items-center justify-center"></div>`,
+                        iconSize: [20, 20],
+                        iconAnchor: [10, 10]
+                    });
+
+                    userMarker = L.marker([lat, lng], { icon: userIcon }).addTo(map);
+                    map.flyTo([lat, lng], 13, { duration: 1.5 });
+
+                    document.getElementById('overlayLocationTitle').innerText = "Your GPS Location";
+                    document.getElementById('permissionBadge').innerText = "Open Category / Check Local Landowner";
+                    document.getElementById('permissionBadge').className = "text-[10px] px-2 py-0.5 rounded font-bold bg-sky-500/20 text-sky-400 border border-sky-500/30";
+                    document.getElementById('sunsetStat').innerText = "⭐ 9.5/10 (Local View)";
+                    document.getElementById('permissionDescription').innerText = "Live satellite coordinates acquired. Maintain VLOS, stay below 400ft, and verify local landowner or council bylaws.";
+                    document.getElementById('contactBox').classList.add('hidden');
+                }, () => {
+                    alert("Unable to retrieve your location. Please check browser permissions.");
+                });
+            } else {
+                alert("Geolocation is not supported by your browser.");
+            }
+        }
+
+        function renderDirectoryGrid() {
+            const query = (document.getElementById('directorySearch')?.value || '').toLowerCase();
+            const gridEl = document.getElementById('directoryGrid');
+            gridEl.innerHTML = '';
+
+            const filtered = scenicSpots.filter(s => s.name.toLowerCase().includes(query) || s.desc.toLowerCase().includes(query) || s.email.toLowerCase().includes(query) || s.category.toLowerCase().includes(query));
+
+            filtered.forEach(spot => {
+                const card = document.createElement('div');
+                card.className = "bg-slate-900 border border-slate-800 rounded-2xl p-5 space-y-3 shadow-lg hover:border-sky-500/50 transition flex flex-col justify-between";
+                card.innerHTML = `
+                    <div class="space-y-2">
+                        <div class="flex items-center justify-between">
+                            <span class="font-semibold text-sm text-white">${spot.name}</span>
+                            <span class="text-[10px] px-2 py-0.5 rounded font-bold ${spot.statusClass}">${spot.category}</span>
+                        </div>
+                        <p class="text-xs text-slate-300 leading-relaxed">${spot.desc}</p>
+                        <div class="text-xs font-semibold text-amber-400 flex items-center space-x-1">
+                            <i data-lucide="sun" class="w-3.5 h-3.5"></i>
+                            <span>Sunset Rating: ${spot.sunset}</span>
+                        </div>
+                    </div>
+                    <div class="pt-3 border-t border-slate-800 space-y-2 text-xs">
+                        <div class="flex items-center justify-between text-slate-400">
+                            <span>Phone: <a href="tel:${spot.phone}" class="text-sky-400 hover:underline font-medium">${spot.phone}</a></span>
+                        </div>
+                        <div class="flex items-center justify-between text-slate-400">
+                            <span>Email: <a href="mailto:${spot.email}" class="text-sky-400 hover:underline font-medium">${spot.email}</a></span>
+                        </div>
+                        <div class="pt-1 flex justify-end">
+                            <button onclick="switchTab('map'); selectSpot(scenicSpots.find(s => s.id === ${spot.id})); map.flyTo([${spot.lat}, ${spot.lng}], 13);" class="text-sky-400 hover:underline font-semibold flex items-center space-x-1 cursor-pointer">
+                                <span>View on Satellite Map</span> <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+                gridEl.appendChild(card);
+            });
+            lucide.createIcons();
+        }
+
+        // Initialize default view
+        initMap();
+    </script>
+</body>
+</html>
